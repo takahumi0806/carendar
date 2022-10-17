@@ -22,6 +22,7 @@ Requirementで列挙したライブラリなどのインストール方法を説
 ```bash
 $ npm init
 $ npm install express --save
+$ npm install
 pip install huga_package
 ```
  
