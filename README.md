@@ -12,8 +12,9 @@
  
 "hoge"を動かすのに必要なライブラリなどを列挙する
  
-* huga 3.5.2
-* hogehuga 1.0.2
+* Docker version 20.10.5, build 55c4c88
+* node.js v16.9.1
+* mysql  Ver 14.14 
  
 # Installation
  
@@ -23,17 +24,39 @@ Requirementで列挙したライブラリなどのインストール方法を説
 $ npm init
 $ npm install express --save
 $ npm install
-pip install huga_package
+$ npx sequelize-cli init
+$ npm install -g express
 ```
  
 # Usage
  
-DEMOの実行方法など、"hoge"の基本的な使い方を説明する
- 
 ```bash
-git clone https://github.com/hoge/~
-cd examples
-python demo.py
+git clone https://github.com/takahumi0806/BulletinBoardDocker
+cd BulletinBoardDocker
+
+imageを構築します
+docker-compose build 
+コンテナを起動します。
+docker-compose run --rm app /bin/bash 
+
+インストール
+$ npm install express --save
+$ npm install
+$ npx sequelize-cli init
+#config migrations models seeders　が作成される。
+exit コンテナを抜ける
+
+docker-compose up　
+
+http://localhost:3000/でブラウザにwelcome to expressと出る
+
+mysql databaseが作られているか確認
+docker ps
+docker exec -it コンテナID bash
+mysql -u root -p
+パスワード入力
+SHOW DATABASES;
+
 ```
  
 # Note
@@ -44,15 +67,11 @@ python demo.py
  
 作成情報を列挙する
  
-* 作成者
-* 所属
-* E-mail
+* 作成者　yabuta
+* 所属 千葉県
+* E-mail yabuta@gmail.com
  
 # License
-ライセンスを明示する
- 
-"hoge" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
- 
-社内向けなら社外秘であることを明示してる
+
  
 "hoge" is Confidential.
