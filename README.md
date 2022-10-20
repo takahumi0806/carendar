@@ -44,6 +44,7 @@ $ npm install express --save
 $ npm install
 $ npx sequelize-cli init
 $ npm i mysql2 sequelize sequelize-cli
+$ npm install --save dotenv
 #config migrations models seeders　が作成される。
 exit コンテナを抜ける
 
