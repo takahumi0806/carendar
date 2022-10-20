@@ -46,6 +46,7 @@ $ npx sequelize-cli init
 #config migrations models seeders　が作成される。
 $ npm i mysql2 sequelize sequelize-cli
 $ npm install --save dotenv
+$ npm install -g nodemon
 exit コンテナを抜ける
 
 docker-compose up　
