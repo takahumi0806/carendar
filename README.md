@@ -43,6 +43,7 @@ docker-compose run --rm app /bin/bash
 $ npm install express --save
 $ npm install
 $ npx sequelize-cli init
+$ npm i mysql2 sequelize sequelize-cli
 #config migrations models seeders　が作成される。
 exit コンテナを抜ける
 
