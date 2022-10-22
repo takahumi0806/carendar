@@ -47,6 +47,10 @@ $ npx sequelize-cli init
 $ npm i mysql2 sequelize sequelize-cli
 $ npm install --save dotenv
 $ npm install -g nodemon
+$ npx sequelize-cli db:migrate
+ マイグレーションをしてpostテーブルを作成
+$ npx sequelize-cli seed:generate --name test-users
+ テストユーザーを作る
 exit コンテナを抜ける
 
 docker-compose up　
