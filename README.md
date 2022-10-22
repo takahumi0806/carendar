@@ -50,8 +50,10 @@ $ npm install -g nodemon
 $ npx sequelize-cli db:migrate
  マイグレーションをしてpostテーブルを作成
 $ npx sequelize-cli seed:generate --name test-users
- テストユーザーを作る
-exit コンテナを抜ける
+ seedファイルを作成
+$ npx sequelize-cli db:seed:all
+　seedを実行してテストユーザーを作る
+　exit コンテナを抜ける
 
 docker-compose up　
 
