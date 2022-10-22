@@ -54,6 +54,7 @@ $ npx sequelize-cli seed:generate --name test-users
 $ npx sequelize-cli db:seed:all
 　seedを実行してテストユーザーを作る
 $ npm install body-parser --save
+$ npm install mysql
 　exit コンテナを抜ける
 
 docker-compose up　
