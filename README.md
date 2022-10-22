@@ -53,6 +53,7 @@ $ npx sequelize-cli seed:generate --name test-users
  seedファイルを作成
 $ npx sequelize-cli db:seed:all
 　seedを実行してテストユーザーを作る
+$ npm install body-parser --save
 　exit コンテナを抜ける
 
 docker-compose up　
