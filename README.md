@@ -59,6 +59,7 @@ $ npm install passport
 $ npm install passport-local
 $ npm install passport-jwt
 $ npm install jsonwebtoken
+$ npm install express-session
 　exit コンテナを抜ける
 
 docker-compose up　
