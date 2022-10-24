@@ -55,6 +55,7 @@ $ npx sequelize-cli db:seed:all
 　seedを実行してテストユーザーを作る
 $ npm install body-parser --save
 $ npm install mysql
+$ npm install passport
 $ npm install passport-local
 $ npm install passport-jwt
 $ npm install jsonwebtoken
