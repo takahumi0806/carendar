@@ -102,4 +102,19 @@ module.exports = {
     req.session.passport = undefined;
     res.redirect('/');
   },
+  doGetLogin: (req, res) => {
+    if (req.session.passport === undefined) {
+      res.redirect('/');
+    } else {
+      const token = req.session.passport.user.token;
+      jwt.verify(token, 'secret', (err, user) => {
+        if (err) {
+          return res.sendStatus(403);
+        } else {
+          console.log(user)
+          res.render('post', { user: user });
+        }
+      });
+    }
+  },
 };
