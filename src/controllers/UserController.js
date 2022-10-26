@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 
 const connection = mysql.createConnection({
   host: 'mysql',
@@ -13,10 +14,7 @@ module.exports = {
     connection.query(
       'SELECT * FROM users',
       (error, results) => {
-        // console.log(results)
-        // console.log(results[0])
-        // console.log(results[0].name)
-        res.render('index',{users:results});
+        res.render('index',{errorMessage: ''});
       }
     );
   },
@@ -32,26 +30,51 @@ module.exports = {
     res.redirect('/board');
   },
   doPostUser: (req, res, error) => {
-    // console.log(req.body)
-    // const username = req.body.username;
-    // const password = req.body.password;
-    // console.log(username)
-    // console.log(password)
-    
-    // connection.query(
-    //   'SELECT * FROM users',
-    //   (error, results) => {
-    //     console.log(results)
-    //     console.log(results[0])
-    //     console.log(results[0].name)
-    //     res.render('index',{users:results});
-    //   }
-    // );
-    console.log('OOOOOOOOOOOKLLLJKJKJ')
-    res.send(req.body)
+    const errors = validationResult(req);
+    console.log(errors)
+    if (!errors.isEmpty()) {
+      const errorsArray = errors.array();
+      console.log(errorsArray);
+      res.render('register', {
+        errorMessage: errorsArray,
+      });
+    }else{
+
+
+      const mysql = 'select * from users';
+      connection.query(mysql, function (err, result, fields) {
+        const mail = result.filter((value) => {
+          return value.mail === req.body.mail;
+        });
+        if (mail.length === 1) {
+          res.render('register', {
+            errorMessage: [
+              { msg: 'すでに同じメールアドレスが登録されています。' },
+            ],
+          });
+        } else {
+          const sql = 'INSERT INTO users SET ?';
+          connection.query(sql, req.body, function (err, result, fields) {
+            console.log('ここかな2')
+            if (err) throw err;
+            const token = jwt.sign(
+              { name: req.body.name, mail: req.body.mail },
+              'secret'
+            );
+            req.session.passport = { user: { token: token } };
+            jwt.verify(token, 'secret', (err, user) => {
+              if (err) {
+                return res.sendStatus(403);
+              } else {
+                res.redirect('/board');
+              }
+            });
+          });
+        }
+      });
+    }
   },
   doGetBoard: (req, res) => {
-    console.log(req.session.passport.user.token)
     if (req.session.passport === undefined) {
       res.redirect('/');
     } else {
@@ -64,5 +87,19 @@ module.exports = {
         }
       });
     }
+  },
+  doGetFailure: (req, res) => {
+    res.render('index', {
+      errorMessage: [{ msg: 'パスワードかemailが違います' }],
+    });
+  },
+  doGetRegistar: (req, res) => {
+    res.render('register', {
+      errorMessage: '',
+    });
+  },
+  doPostLogout: (req, res) => {
+    req.session.passport = undefined;
+    res.redirect('/');
   },
 };

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <%- include('../views/partials/head'); %>
   </head>
+  <header><%- include('../views/partials/header'); %></header>
   <form action="/login" method="POST">
     <table align="center">
       <tr>
@@ -24,21 +25,6 @@
       </tr>
     </table>
   </form>
-    <ul>
-      <% users.forEach((user) => { %>
-        <li>
-          <div>
-            <span><%= user.id %></span>
-            <span><%= user.name %></span>
-            <span><%= user.password %></span>
-          </div>
-        </li>
-      <% }) %>
-    </ul>
-
-    <form method="post" action="/">
-      <input type="text" name="msg">
-      <input type="submit" value="送信する">
-    </form>
+  <%- include('../views/partials/error'); %>
   </body>
 </html>

@@ -6,6 +6,7 @@ const app = express();
 const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 const mysql = require('mysql');
+const ItemRegistValidator = require('../validators/userRegistValidator');
 
 
 const con = mysql.createConnection({
@@ -76,7 +77,10 @@ router.get('/', userController.doGetUser);
 router.post('/login', userController.doPostUser);
 router.get('/success', userController.doGetSuccess);
 router.get('/board', userController.doGetBoard);
-
+router.get('/failure', userController.doGetFailure);
+router.get('/register', userController.doGetRegistar);
+router.post('/',ItemRegistValidator, userController.doPostUser);
+router.post('/logout', userController.doPostLogout);
 
 
 module.exports = router;
