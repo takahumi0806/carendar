@@ -47,10 +47,8 @@ passport.use(
     const sql = 'select * from users';
     con.query(sql, function (err, result, fields) {
       const currentUser = result.filter((value) => {
-        console.log(value);
         return value.mail === mail;
       });
-      console.log(currentUser);
       if (currentUser.length === 0) {
         // Error
         return done(null, false);
