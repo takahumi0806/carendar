@@ -31,10 +31,8 @@ module.exports = {
   },
   doPostUser: (req, res, error) => {
     const errors = validationResult(req);
-    console.log(errors)
     if (!errors.isEmpty()) {
       const errorsArray = errors.array();
-      console.log(errorsArray);
       res.render('register', {
         errorMessage: errorsArray,
       });
@@ -55,7 +53,6 @@ module.exports = {
         } else {
           const sql = 'INSERT INTO users SET ?';
           connection.query(sql, req.body, function (err, result, fields) {
-            console.log('ここかな2')
             if (err) throw err;
             const token = jwt.sign(
               { name: req.body.name, mail: req.body.mail },
@@ -111,7 +108,6 @@ module.exports = {
         if (err) {
           return res.sendStatus(403);
         } else {
-          console.log(user)
           res.render('post', { user: user });
         }
       });
