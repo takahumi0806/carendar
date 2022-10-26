@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+  <form action="/login" method="POST">
+    <table align="center">
+      <tr>
+        <td>E-mail Address</td>
+      </tr>
+      <tr>
+        <td><input type="email" name="username" /></td>
+      </tr>
+      <tr>
+        <td>Password</td>
+      </tr>
+      <tr>
+        <td><input type="password" name="password" /></td>
+      </tr>
+      <tr>
+        <td>
+          <input type="submit" value="Login" />
+        </td>
+      </tr>
+    </table>
+  </form>
+    <ul>
+      <% users.forEach((user) => { %>
+        <li>
+          <div>
+            <span><%= user.id %></span>
+            <span><%= user.name %></span>
+            <span><%= user.password %></span>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+
+    <form method="post" action="/">
+      <input type="text" name="msg">
+      <input type="submit" value="送信する">
+    </form>
   </body>
 </html>
