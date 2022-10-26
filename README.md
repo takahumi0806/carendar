@@ -63,7 +63,7 @@ $ npm install express-session
 $ npm install --save express-validator
 　exit コンテナを抜ける
 
-docker-compose up　
+docker-compose up
 
 http://localhost:3000/でブラウザにwelcome to expressと出る
 
