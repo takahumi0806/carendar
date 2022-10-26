@@ -70,7 +70,7 @@ $ npx sequelize-cli db:seed:all
 
 docker-compose up
 
-http://localhost:3000/でブラウザにwelcome to expressと出る
+http://localhost:3000/でブラウザにログイン画面が出る
 
 mysql databaseが作られているか確認
 docker ps
