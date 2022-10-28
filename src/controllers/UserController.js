@@ -11,12 +11,9 @@ const connection = mysql.createConnection({
 
 module.exports = {
   doGetUser: (req, res, error) => {
-    connection.query(
-      'SELECT * FROM users',
-      (error, results) => {
-        res.render('index',{errorMessage: ''});
-      }
-    );
+    connection.query('SELECT * FROM users', (error, results) => {
+      res.render('index', { errorMessage: '' });
+    });
   },
   doGetSuccess: (req, res, error) => {
     const token = jwt.sign(
@@ -36,9 +33,7 @@ module.exports = {
       res.render('register', {
         errorMessage: errorsArray,
       });
-    }else{
-
-
+    } else {
       const mysql = 'select * from users';
       connection.query(mysql, function (err, result, fields) {
         const mail = result.filter((value) => {
