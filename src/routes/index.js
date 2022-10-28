@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/UserController');
+const authController = require('../controllers/AuthController.js');
 const bodyParser = require('body-parser');
 const app = express();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mysql = require('mysql');
-const ItemRegistValidator = require('../validators/userRegistValidator');
+const userRegistValidator = require('../validators/userRegistValidator');
 
 const con = mysql.createConnection({
   host: 'mysql',
@@ -72,12 +73,12 @@ passport.use(
 
 router.get('/', userController.doGetUser);
 router.post('/login', userController.doPostUser);
-router.get('/success', userController.doGetSuccess);
-router.get('/board', userController.doGetBoard);
-router.get('/failure', userController.doGetFailure);
-router.get('/register', userController.doGetRegistar);
-router.post('/', ItemRegistValidator, userController.doPostUser);
-router.post('/logout', userController.doPostLogout);
-router.get('/post', userController.doGetLogin);
+router.get('/success', authController.successLogin);
+router.get('/board', userController.board);
+router.get('/failure', authController.failureLogin);
+router.get('/register', userController.registar);
+router.post('/', userRegistValidator, userController.doPostUser);
+router.post('/logout', userController.logout);
+router.get('/post', userController.login);
 
 module.exports = router;

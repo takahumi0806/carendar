@@ -11,20 +11,7 @@ const connection = mysql.createConnection({
 
 module.exports = {
   doGetUser: (req, res, error) => {
-    connection.query('SELECT * FROM users', (error, results) => {
-      res.render('index', { errorMessage: '' });
-    });
-  },
-  doGetSuccess: (req, res, error) => {
-    const token = jwt.sign(
-      {
-        name: req.session.passport.user.username,
-        email: req.session.passport.user.mail,
-      },
-      'secret'
-    );
-    req.session.passport.user['token'] = token;
-    res.redirect('/board');
+    res.render('index', { errorMessage: '' });
   },
   doPostUser: (req, res, error) => {
     const errors = validationResult(req);
@@ -66,7 +53,7 @@ module.exports = {
       });
     }
   },
-  doGetBoard: (req, res) => {
+  board: (req, res) => {
     if (req.session.passport === undefined) {
       res.redirect('/');
     } else {
@@ -80,21 +67,16 @@ module.exports = {
       });
     }
   },
-  doGetFailure: (req, res) => {
-    res.render('index', {
-      errorMessage: [{ msg: 'パスワードかemailが違います' }],
-    });
-  },
-  doGetRegistar: (req, res) => {
+  registar: (req, res) => {
     res.render('register', {
       errorMessage: '',
     });
   },
-  doPostLogout: (req, res) => {
+  logout: (req, res) => {
     req.session.passport = undefined;
     res.redirect('/');
   },
-  doGetLogin: (req, res) => {
+  login: (req, res) => {
     if (req.session.passport === undefined) {
       res.redirect('/');
     } else {
