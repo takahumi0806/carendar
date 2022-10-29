@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator');
 const Users = require('../models/register');
 
 module.exports = {
-  doGetUser(req, res, error) {
+  getUser(req, res, error) {
     res.render('index', { errorMessage: '' });
   },
   async doPostUser(req, res, error) {
@@ -14,7 +14,7 @@ module.exports = {
         errorMessage: errorsArray,
       });
     } else {
-      const mail = await Users.uniqueMail(req.body);
+      const mail = await Users.uniqueMail(req.body.mail);
       if (mail.length === 1) {
         res.render('register', {
           errorMessage: [

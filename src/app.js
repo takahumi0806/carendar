@@ -8,6 +8,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const router = express.Router();
+const Users = require('./models/register');
 
 app.use(
   session({
@@ -26,6 +29,46 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
+passport.serializeUser((user, done) => {
+  console.log('Serialize ...');
+  done(null, user);
+});
+passport.deserializeUser((user, done) => {
+  console.log('Deserialize ...');
+  done(null, user);
+});
+
+router.use(passport.initialize());
+router.use(passport.session());
+
+passport.use(
+  new LocalStrategy(async (mail, password, done) => {
+    const currentUser = await Users.uniqueMail(mail);
+    if (currentUser.length === 0) {
+      // Error
+      return done(null, false);
+    } else if (mail !== currentUser[0].mail) {
+      // Error
+      return done(null, false);
+    } else if (password !== currentUser[0].password) {
+      // Error
+      return done(null, false);
+    } else {
+      // Success and return user information.
+      return done(null, {
+        username: currentUser[0].name,
+        password: password,
+        mail: mail,
+      });
+    }
+  })
+);
 
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
