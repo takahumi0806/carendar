@@ -6,7 +6,7 @@ module.exports = {
   getUser(req, res, error) {
     res.render('index', { errorMessage: '' });
   },
-  async doPostUser(req, res, error) {
+  async postUser(req, res, error) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorsArray = errors.array();
@@ -57,7 +57,7 @@ module.exports = {
     req.session.passport = undefined;
     res.redirect('/');
   },
-  login: (req, res) => {
+  myPape: (req, res) => {
     if (req.session.passport === undefined) {
       res.redirect('/');
     } else {
