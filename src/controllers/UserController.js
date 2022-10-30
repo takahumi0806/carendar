@@ -48,8 +48,8 @@ module.exports = {
       });
     }
   },
-  registar: (req, res) => {
-    res.render('register', {
+  fillout: (req, res) => {
+    res.render('fillout', {
       errorMessage: '',
     });
   },
