@@ -1,12 +1,14 @@
+require('dotenv').config();
+
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const sql = 'INSERT INTO users SET ?';
 const users = 'SELECT * FROM users';
 const con = mysql.createConnection({
-  host: 'mysql',
-  user: 'root',
-  password: 'root',
-  database: 'post',
+  host: process.env.MYSQL_ROOT_SERVER,
+  user: process.env.MYSQL_ROOT_USER,
+  password: process.env.MYSQL_ROOT_PASSWORD,
+  database: process.env.MYSQL_ROOT_DATABASE,
 });
 module.exports = {
   uniqueMail(user) {
