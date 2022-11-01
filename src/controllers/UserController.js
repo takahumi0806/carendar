@@ -5,10 +5,6 @@ const db = require('../models/index');
 
 module.exports = {
   getUser(req, res, error) {
-    db.user.findAll({}).then((instances) => { 
-      console.log('OK')
-      console.log(instances[5].dataValues.name);
-    });
     res.render('index', { errorMessage: '' });
   },
   async postUser(req, res, error) {
