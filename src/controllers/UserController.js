@@ -1,22 +1,27 @@
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const Users = require('../models/register');
+const db = require('../models/index'); 
 
 module.exports = {
   getUser(req, res, error) {
+    db.user.findAll({}).then((instances) => { 
+      console.log('OK')
+      console.log(instances[5].dataValues.name);
+    });
     res.render('index', { errorMessage: '' });
   },
   async postUser(req, res, error) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorsArray = errors.array();
-      res.render('register', {
+      res.render('fillout', {
         errorMessage: errorsArray,
       });
     } else {
       const mail = await Users.uniqueMail(req.body.mail);
       if (mail.length === 1) {
-        res.render('register', {
+        res.render('fillout', {
           errorMessage: [
             { msg: 'すでに同じメールアドレスが登録されています。' },
           ],
