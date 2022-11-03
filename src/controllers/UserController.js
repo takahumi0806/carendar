@@ -13,40 +13,33 @@ module.exports = {
       res.render('fillout', {
         errorMessage: errorsArray,
       });
-    } else {
-      const mail = await Users.uniqueMail(req.body.mail);
-      if (mail.length === 1) {
-        res.render('fillout', {
-          errorMessage: [
-            { msg: 'すでに同じメールアドレスが登録されています。' },
-          ],
-        });
-      } else {
-        const token = await Users.postUser(req.body);
-        req.session.passport = { user: { token: token } };
-        jwt.verify(token, 'secret', (err, user) => {
-          if (err) {
-            return res.sendStatus(403);
-          } else {
-            res.redirect('/board');
-          }
-        });
-      }
     }
+    const mail = await Users.uniqueMail(req.body.mail);
+    if (mail.length === 1) {
+      res.render('fillout', {
+        errorMessage: [{ msg: 'すでに同じメールアドレスが登録されています。' }],
+      });
+    }
+    const token = await Users.postUser(req.body);
+    req.session.passport = { user: { token: token } };
+    jwt.verify(token, 'secret', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      res.redirect('/board');
+    });
   },
   board: (req, res) => {
     if (req.session.passport === undefined) {
       res.redirect('/');
-    } else {
-      const token = req.session.passport.user.token;
-      jwt.verify(token, 'secret', (err, user) => {
-        if (err) {
-          return res.sendStatus(403);
-        } else {
-          res.render('board', { user: user });
-        }
-      });
     }
+    const token = req.session.passport.user.token;
+    jwt.verify(token, 'secret', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      res.render('board', { user: user });
+    });
   },
   fillout: (req, res) => {
     res.render('fillout', {
@@ -60,15 +53,13 @@ module.exports = {
   myPape: (req, res) => {
     if (req.session.passport === undefined) {
       res.redirect('/');
-    } else {
-      const token = req.session.passport.user.token;
-      jwt.verify(token, 'secret', (err, user) => {
-        if (err) {
-          return res.sendStatus(403);
-        } else {
-          res.render('post', { user: user });
-        }
-      });
     }
+    const token = req.session.passport.user.token;
+    jwt.verify(token, 'secret', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      res.render('post', { user: user });
+    });
   },
 };
