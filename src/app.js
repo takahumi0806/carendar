@@ -48,23 +48,16 @@ router.use(passport.session());
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
     const currentUser = await Users.uniqueMail(mail);
-    if(!currentUser.length) {
+    if(!currentUser.length || mail !== currentUser[0].mail ||password !== currentUser[0].password) {
       // Error
       return done(null, false);
-    } else if (mail !== currentUser[0].mail) {
-      // Error
-      return done(null, false);
-    } else if (password !== currentUser[0].password) {
-      // Error
-      return done(null, false);
-    } else {
-      // Success and return user information.
-      return done(null, {
-        username: currentUser[0].name,
-        password: password,
-        mail: mail,
-      });
-    }
+    } 
+    // Success and return user information.
+    return done(null, {
+      username: currentUser[0].name,
+      password: password,
+      mail: mail,
+    });
   })
 );
 
