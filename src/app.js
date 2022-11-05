@@ -11,6 +11,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const router = express.Router();
 const Users = require('./models/register');
+const jwt = require('jsonwebtoken');
 
 app.use(
   session({
@@ -35,8 +36,17 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-passport.serializeUser((user, done) => {
+passport.serializeUser((req, user, done) => {
   done(null, user);
+  req.session.passport = { user:user };
+  const token = jwt.sign(
+    {
+      name: req.session.passport.user.username,
+      email: req.session.passport.user.mail,
+    },
+    'secret'
+  );
+  req.session.passport = { user: { token: token } };
 });
 passport.deserializeUser((user, done) => {
   done(null, user);

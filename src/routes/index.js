@@ -9,12 +9,11 @@ router.post(
   '/login',
   passport.authenticate('local', {
     failureRedirect: '/failure',
-    successRedirect: '/success',
+    successRedirect: '/board',
   })
 );
 
 router.get('/', userController.getUser);
-router.get('/success', authController.successLogin);
 router.get('/board', userController.board);
 router.get('/failure', authController.failureLogin);
 router.get('/fillout', userController.fillout);
