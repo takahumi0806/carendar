@@ -8,14 +8,13 @@ const userRegistValidator = require('../validators/userRegistValidator');
 router.post(
   '/login',
   passport.authenticate('local', {
-    failureRedirect: '/failure',
+    failureRedirect: '/',
     successRedirect: '/board',
   })
 );
 
 router.get('/', userController.getUser);
 router.get('/board', userController.board);
-router.get('/failure', authController.failureLogin);
 router.get('/fillout', userController.fillout);
 router.post('/register', userRegistValidator, userController.postUser);
 router.post('/logout', userController.logout);
