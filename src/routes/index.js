@@ -15,8 +15,8 @@ router.post(
 
 router.get('/', userController.getUser);
 router.get('/board', userController.board);
-router.get('/fillout', userController.fillout);
-router.post('/register', userRegistValidator, userController.postUser);
+router.get('/register', userController.fillout);
+router.post('/signup', userRegistValidator, userController.postUser);
 router.post('/logout', userController.logout);
 router.get('/comment', userController.myPape);
 module.exports = router;
