@@ -39,6 +39,7 @@ $ npm install passport-jwt
 $ npm install jsonwebtoken
 $ npm install express-session
 $ npm install --save express-validator
+$ npm install connect-flash
 
 
 $ npx sequelize-cli model:generate --name users --attributes name:string,mail:string,password:string,passwordconfirm:string
