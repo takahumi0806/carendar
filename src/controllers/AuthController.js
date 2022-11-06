@@ -14,7 +14,7 @@ module.exports = {
   },
   failureLogin: (req, res) => {
     res.render('index', {
-      errorMessage: [{ msg: 'パスワードかemailが違います' }],
+      errorMessage: [{ msg: 'パスワードかmailが違います' }],
     });
   },
 };

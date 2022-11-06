@@ -30,7 +30,7 @@ module.exports = {
     });
   },
   board: (req, res) => {
-    if (req.session.passport === undefined) {
+    if (!req.user) {
       res.redirect('/');
     }
     const token = req.session.passport.user.token;
@@ -51,7 +51,7 @@ module.exports = {
     res.redirect('/');
   },
   myPape: (req, res) => {
-    if (req.session.passport === undefined) {
+    if (!req.user) {
       res.redirect('/');
     }
     const token = req.session.passport.user.token;
