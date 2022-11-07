@@ -9,7 +9,7 @@ router.post(
   '/login',
   passport.authenticate('local', {
     failureRedirect: '/',
-    failureFlash: true ,
+    failureFlash: true,
     successRedirect: '/user',
   })
 );
