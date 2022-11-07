@@ -9,14 +9,15 @@ router.post(
   '/login',
   passport.authenticate('local', {
     failureRedirect: '/',
-    successRedirect: '/board',
+    failureFlash: true ,
+    successRedirect: '/user',
   })
 );
 
 router.get('/', userController.getUser);
-router.get('/board', userController.board);
-router.get('/register', userController.fillout);
-router.post('/signup', userRegistValidator, userController.postUser);
-router.post('/logout', userController.logout);
-router.get('/comment', userController.myPape);
+router.get('/user', userController.myPage);
+router.get('/register', userController.register);
+router.post('/signup', userRegistValidator, authController.postUser);
+router.post('/logout', authController.logout);
+router.get('/message', userController.message);
 module.exports = router;

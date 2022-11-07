@@ -9,11 +9,11 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const router = express.Router();
 const Users = require('./models/register');
 const jwt = require('jsonwebtoken');
+const flash = require('connect-flash');
 
-
+app.use(flash());
 app.use(
   session({
     secret: 'keyboard cat',
@@ -37,17 +37,18 @@ app.use(
 );
 app.use(bodyParser.json());
 
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
     const currentUser = await Users.uniqueMail(mail);
-    if(!currentUser.length || mail !== currentUser[0].mail ||password !== currentUser[0].password) {
+    if (!currentUser.length ||mail !== currentUser[0].mail ||password !== currentUser[0].password) {
       // Error
-      return done(null, false, { message: 'パスワードが正しくありません。' });
-    } 
+      return done(null, false, {
+        message: 'メールかパスワードが正しくありません。',
+      });
+    }
     // Success and return user information.
     return done(null, {
       username: currentUser[0].name,
@@ -59,16 +60,15 @@ passport.use(
 
 passport.serializeUser((req, user, done) => {
   done(null, user);
-  req.session.passport = undefined;
-  req.session.passport = { user:user };
   const token = jwt.sign(
     {
-      name: req.session.passport.user.username,
-      email: req.session.passport.user.mail,
+      name: req.user.username,
+      email: req.user.mail,
     },
     'secret'
   );
-  req.session.passport = { user: { token: token } };
+  console.log(req.user)
+  req.session.passport = { user: { token } };
 });
 passport.deserializeUser((user, done) => {
   done(null, user);
