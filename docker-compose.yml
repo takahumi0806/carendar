@@ -19,7 +19,7 @@ services:
       - mysqldata:/var/lib/mysql
     networks:
       - container-link
-
+      
   app:
     build: .
     container_name: BulletinBoard_app_container

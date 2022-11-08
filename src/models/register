@@ -1,0 +1,33 @@
+'use strict';
+const db = require('../models/index');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+
+module.exports = {
+  uniqueMail(user) {
+    return new Promise((resolve, reject) => {
+      db.user.findAll({ where: { mail: user } }).then((mail) => {
+        const email = mail;
+        resolve(email);
+      });
+    });
+  },
+  postUser(user) {
+    return new Promise((resolve, reject) => {
+      db.user
+        .create({
+          name: user.name,
+          mail: user.mail,
+          password: user.password,
+          passwordconfirm: user.passwordconfirm,
+        })
+        .then(() => {
+          const token = jwt.sign(
+            { name: user.name, mail: user.mail },
+            'secret'
+          );
+          resolve(token);
+        });
+    });
+  },
+};
