@@ -5,13 +5,17 @@
   <body>
     <header><%- include('../views/partials/headerLogin'); %></header>
     <span id="append"></span>
-    <form action="/message" method="POST">
+    <form action="/messages/<%= messages.id %>/update" method="POST">
       <table align="center" id="post">
         <tr>
           <td>タイトル</td>
         </tr>
         <tr>
-          <td><input type="text" name="title" style="width: 1008px"></td>
+          <td><input type="text" name="title" style="width: 1008px" value=
+          <% if(messages) { %>
+            <%= messages.title %>
+          <% } %> />
+          </td>
         </tr>
         <tr>
           <td>コンテンツ</td>
@@ -23,7 +27,10 @@
               rows="4"
               cols="40"
               style="width: 1008px; height: 204px"
-            ></textarea>
+            >             
+             <% if(messages) { %>
+              <%= messages.content %>
+            <% } %></textarea>
           </td>
         </tr>
         <tr>
@@ -38,10 +45,7 @@
         </tr>
       </table>
     </form>
-    <%- include('../views/partials/error'); %>
+
   </body>
   <%- include('../views/partials/script'); %>
 </html>
-
-
-

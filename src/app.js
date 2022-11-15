@@ -51,6 +51,7 @@ passport.use(
     }
     // Success and return user information.
     return done(null, {
+      id: currentUser[0].id,
       username: currentUser[0].name,
       password: password,
       mail: mail,
@@ -62,12 +63,12 @@ passport.serializeUser((req, user, done) => {
   done(null, user);
   const token = jwt.sign(
     {
+      id: req.user.id,
       name: req.user.username,
-      email: req.user.mail,
+      mail: req.user.mail,
     },
     'secret'
   );
-  console.log(req.user)
   req.session.passport = { user: { token } };
 });
 passport.deserializeUser((user, done) => {

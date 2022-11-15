@@ -23,11 +23,39 @@ module.exports = {
         })
         .then(() => {
           const token = jwt.sign(
-            { name: user.name, mail: user.mail },
+            { name: user.name, mail: user.mail, id:user.id},
             'secret'
           );
           resolve(token);
         });
     });
   },
+  createMessage(message) {
+    return new Promise((resolve, reject) => {
+      db.Messages.create({
+        userId: message.userId,
+        title: message.title,
+        content: message.content,
+      }).then(() => {
+        resolve();
+      });
+    });
+  },
+  message() {
+    return new Promise((resolve, reject) => {
+      db.Messages.findAll({
+        include: [{model: db.user}]
+      }).then((message) => {
+        resolve(message);
+      });
+    });
+  },
+  searchMessage(message){
+    return new Promise((resolve, reject) => {
+      db.Messages.findAll({ where: { id: message } }).then((message) => {
+        const messages = message[0].dataValues;
+        resolve(messages);
+      })
+    });
+  }
 };
