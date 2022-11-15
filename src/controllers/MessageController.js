@@ -1,15 +1,12 @@
 const Users = require('../models/register');
 const { validationResult } = require('express-validator');
 const db = require('../models/index');
-const jwt = require('jsonwebtoken');
 module.exports = {
   async message(req, res) {
     if (!req.user) {
       res.redirect('/');
     }
-    const mail = jwt.verify(req.user.token, 'secret');
-    const users = await Users.uniqueMail(mail.mail);
-    const user = users[0];
+    const user = await Users.loginUser(req.user.token);
     if (!req.params.id) {
       res.render('message', { user, errorMessage: '' });
     }
@@ -20,9 +17,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    const mail = jwt.verify(req.user.token, 'secret');
-    const users = await Users.uniqueMail(mail.mail);
-    const user = users[0];
+    const user = await Users.loginUser(req.user.token);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorsArray = errors.array();
@@ -30,33 +25,21 @@ module.exports = {
         errorMessage: errorsArray,
         user,
       });
-      await Users.createMessage(req.body);
     }
-    const messages = await Users.message();
+    await Users.createMessage(req.body);
+    const messages = await Users.allMessage();
     res.render('mypage', { user, messages });
   },
   async updateMessage(req, res) {
-    const id = req.params.id;
-    await db.Messages.update(
-      { title: req.body.title, content: req.body.content },
-      { where: { id } }
-    );
-    const messages = await Users.message();
-    const mail = jwt.verify(req.user.token, 'secret');
-    const users = await Users.uniqueMail(mail.mail);
-    const user = users[0];
+    await Users.updateMsg(req.params.id, req.body)
+    const messages = await Users.allMessage();
+    const user = await Users.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
   async deleteMessage(req, res) {
-    await db.Messages.findOne({
-      where: { id: req.params.id },
-    }).then((user) => {
-      user.destroy();
-    });
-    const messages = await Users.message();
-    const mail = jwt.verify(req.user.token, 'secret');
-    const users = await Users.uniqueMail(mail.mail);
-    const user = users[0];
+    await Users.deleteMsg(req.params.id)
+    const messages = await Users.allMessage();
+    const user = await Users.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
 }

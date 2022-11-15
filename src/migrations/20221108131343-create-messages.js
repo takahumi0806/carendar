@@ -10,12 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       content: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       userId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: { model: 'users', key: 'id' },
         onUpdate: 'cascade',

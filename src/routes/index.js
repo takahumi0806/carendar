@@ -12,18 +12,18 @@ router.post(
   passport.authenticate('local', {
     failureRedirect: '/',
     failureFlash: true,
-    successRedirect: '/user',
+    successRedirect: '/users',
   })
 );
 
 router.get('/', userController.getUser);
-router.get('/user', userController.myPage);
+router.get('/users', userController.myPage);
 router.get('/register', userController.register);
 router.post('/signup', userRegistValidator, authController.postUser);
 router.post('/logout', authController.logout);
-router.get('/message', messageController.message);
+router.post('/messages', messageRegistValidator, messageController.postMessage);
+router.get('/messages', messageController.message);
 router.get('/messages/:id', messageController.message);
-router.post('/messages/:id/update', messageController.updateMessage)
-router.post('/message', messageRegistValidator, messageController.postMessage);
 router.get('/messages/:id/delete', messageController.deleteMessage)
+router.post('/messages/:id/update', messageController.updateMessage)
 module.exports = router;

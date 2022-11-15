@@ -2,17 +2,15 @@
 const db = require('../models/index');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-
 module.exports = {
-  uniqueMail(user) {
+  uniqueMail(user) {//メールでユーザーを探す
     return new Promise((resolve, reject) => {
       db.user.findAll({ where: { mail: user } }).then((mail) => {
-        const email = mail;
-        resolve(email);
+        resolve(mail);
       });
     });
   },
-  postUser(user) {
+  postUser(user) {//ユーザーを作成
     return new Promise((resolve, reject) => {
       db.user
         .create({
@@ -30,7 +28,7 @@ module.exports = {
         });
     });
   },
-  createMessage(message) {
+  createMessage(message) {//メッセージを作成
     return new Promise((resolve, reject) => {
       db.Messages.create({
         userId: message.userId,
@@ -41,7 +39,7 @@ module.exports = {
       });
     });
   },
-  message() {
+  allMessage() {//メッセージとユーザーをリレーションしている
     return new Promise((resolve, reject) => {
       db.Messages.findAll({
         include: [{model: db.user}]
@@ -50,12 +48,40 @@ module.exports = {
       });
     });
   },
-  searchMessage(message){
+  searchMessage(id){//メッセージのアップデートでidからメッセージを検索
     return new Promise((resolve, reject) => {
-      db.Messages.findAll({ where: { id: message } }).then((message) => {
+      db.Messages.findAll({ where: { id: id } }).then((message) => {
         const messages = message[0].dataValues;
         resolve(messages);
       })
     });
+  },
+  loginUser(user){ //ログインしているユーザーを探す
+    return new Promise((resolve, reject) => {
+      const mail = jwt.verify(user, 'secret');
+      db.user.findAll({ where: { mail: mail.mail } }).then((users) => {
+        const user = users[0].dataValues;
+        resolve(user);
+      })
+    })
+  },
+  updateMsg(id, messages){//メッセージをアップデートしている
+    return new Promise((resolve, reject) => {
+      const message = db.Messages.update(
+        { title: messages.title, content: messages.content },
+        { where: { id } }
+      );
+      resolve(message);
+    })
+  },
+  deleteMsg(id){//メッセージ削除
+    return new Promise((resolve, reject) => {
+      const message = db.Messages.findOne({
+        where: { id: id },
+      }).then((user) => {
+        user.destroy();
+      });
+      resolve(message);
+    })
   }
 };
