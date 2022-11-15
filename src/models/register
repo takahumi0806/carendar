@@ -48,9 +48,9 @@ module.exports = {
       db.Messages.findAll({
         include: [{ model: db.user }],
       }).then((message) => {
-        message.sort(function (a, b) {
-          if (a.createdAt < b.createdAt) return -1;
-          if (a.createdAt > b.createdAt) return 1;
+        message.sort((a, b) => {
+          if (a.id < b.id) return -1;
+          if (a.id > b.id) return 1;
           return 0;
         });
         resolve(message);
