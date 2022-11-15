@@ -22,14 +22,14 @@
         </tr>
         <% } else {%>
           <td><input type="text" name="title" style="width: 1008px" value=
-              <%= messages.title %>
+            <%= messages.title %>
           </td>
         <% } %> 
         <tr>
           <td>コンテンツ</td>
         </tr>
         <tr>
-          <% if(messages === '') { %>
+        <% if(messages === '') { %>
           <td>
             <textarea
               name="content"
@@ -38,18 +38,18 @@
               style="width: 1008px; height: 204px"
             ></textarea>
           </td>
-          <% } else {%>
-            <td>
-              <textarea
-                name="content"
-                rows="4"
-                cols="40"
-                style="width: 1008px; height: 204px"
-              >             
-                <%= messages.content %>
-              </textarea>
-            </td>
-            <% } %>
+        <% } else {%>
+          <td>
+            <textarea
+              name="content"
+              rows="4"
+              cols="40"
+              style="width: 1008px; height: 204px"
+            >             
+              <%= messages.content %>
+            </textarea>
+          </td>
+        <% } %>
         </tr>
         <tr>
           <td>
@@ -57,18 +57,17 @@
           </td>
         </tr>
         <tr>
-          <% if(messages === '') { %>
+        <% if(messages === '') { %>
+        <td>
+          <input type="submit" value="送信" />
+        </td>
+        <% } else {%>
           <td>
-            <input type="submit" value="送信" />
+            <input type="submit" value="編集" />
           </td>
-          <% } else {%>
-            <td>
-              <input type="submit" value="編集" />
-            </td>
-            <% } %>
+        <% } %>
         </tr>
       </table>
-
     </form>
     <%- include('../views/partials/error'); %>
   </body>
