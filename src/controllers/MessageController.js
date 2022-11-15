@@ -30,7 +30,6 @@ module.exports = {
         errorMessage: errorsArray,
         user,
       });
-    } else {
       await Users.createMessage(req.body);
     }
     const messages = await Users.message();
