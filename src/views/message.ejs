@@ -3,20 +3,33 @@
     <%- include('../views/partials/head'); %>
   </head>
   <body>
+
     <header><%- include('../views/partials/headerLogin'); %></header>
     <span id="append"></span>
-    <form action="/messages" method="POST">
+    <% if(messages === '') { %>
+      <form action="/messages" method="POST">
+    <% } else {%>
+      <form action="/messages/<%= messages.id %>/update" method="POST">
+    <% } %>
+    
       <table align="center" id="post">
         <tr>
           <td>タイトル</td>
         </tr>
+        <% if(messages === '') { %>
         <tr>
           <td><input type="text" name="title" style="width: 1008px"></td>
         </tr>
+        <% } else {%>
+          <td><input type="text" name="title" style="width: 1008px" value=
+              <%= messages.title %>
+          </td>
+        <% } %> 
         <tr>
           <td>コンテンツ</td>
         </tr>
         <tr>
+          <% if(messages === '') { %>
           <td>
             <textarea
               name="content"
@@ -25,6 +38,18 @@
               style="width: 1008px; height: 204px"
             ></textarea>
           </td>
+          <% } else {%>
+            <td>
+              <textarea
+                name="content"
+                rows="4"
+                cols="40"
+                style="width: 1008px; height: 204px"
+              >             
+                <%= messages.content %>
+              </textarea>
+            </td>
+            <% } %>
         </tr>
         <tr>
           <td>
@@ -32,11 +57,18 @@
           </td>
         </tr>
         <tr>
+          <% if(messages === '') { %>
           <td>
             <input type="submit" value="送信" />
           </td>
+          <% } else {%>
+            <td>
+              <input type="submit" value="編集" />
+            </td>
+            <% } %>
         </tr>
       </table>
+
     </form>
     <%- include('../views/partials/error'); %>
   </body>

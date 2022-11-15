@@ -7,10 +7,11 @@ module.exports = {
     }
     const user = await Users.loginUser(req.user.token);
     if (!req.params.id) {
-      res.render('message', { user, errorMessage: '' });
+
+      res.render('message', { user, messages: '', errorMessage: '' });
     }
     const messages = await Users.searchMessage(req.params.id);
-    res.render('update', { user, messages, errorMessage: '' });
+    res.render('message', { user, messages, errorMessage: '' });
   },
   async postMessage(req, res) {
     if (!req.user) {
