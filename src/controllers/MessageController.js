@@ -1,6 +1,5 @@
 const Users = require('../models/register');
 const { validationResult } = require('express-validator');
-const db = require('../models/index');
 module.exports = {
   async message(req, res) {
     if (!req.user) {
