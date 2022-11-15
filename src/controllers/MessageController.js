@@ -25,8 +25,9 @@ module.exports = {
         errorMessage: errorsArray,
         user,
       });
+    } else {
+      await Users.createMessage(req.body);
     }
-    await Users.createMessage(req.body);
     const messages = await Users.allMessage();
     res.render('mypage', { user, messages });
   },
