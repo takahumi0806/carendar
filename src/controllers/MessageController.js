@@ -31,15 +31,15 @@ module.exports = {
     res.render('mypage', { user, messages });
   },
   async updateMessage(req, res) {
-    await Users.updateMsg(req.params.id, req.body)
+    await Users.updateMsg(req.params.id, req.body);
     const messages = await Users.allMessage();
     const user = await Users.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
   async deleteMessage(req, res) {
-    await Users.deleteMsg(req.params.id)
+    await Users.deleteMsg(req.params.id);
     const messages = await Users.allMessage();
     const user = await Users.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
-}
+};

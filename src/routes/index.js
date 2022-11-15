@@ -24,6 +24,6 @@ router.post('/logout', authController.logout);
 router.post('/messages', messageRegistValidator, messageController.postMessage);
 router.get('/messages', messageController.message);
 router.get('/messages/:id', messageController.message);
-router.get('/messages/:id/delete', messageController.deleteMessage)
-router.post('/messages/:id/update', messageController.updateMessage)
+router.get('/messages/:id/delete', messageController.deleteMessage);
+router.post('/messages/:id/update', messageController.updateMessage);
 module.exports = router;
