@@ -23,6 +23,7 @@ module.exports = {
       res.render('message', {
         errorMessage: errorsArray,
         user,
+        messages: ''
       });
     } else {
       await Users.createMessage(req.body);
