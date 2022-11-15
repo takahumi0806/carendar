@@ -22,7 +22,7 @@ module.exports = {
       if (err) {
         return res.sendStatus(403);
       }
-      res.redirect('/user');
+      res.redirect('/users');
     });
   },
   logout: (req, res) => {
