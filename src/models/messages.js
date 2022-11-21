@@ -44,12 +44,21 @@ module.exports = (sequelize, DataTypes) => {
     static createMessage(message) {
       //メッセージを作成
       return new Promise((resolve, reject) => {
-        db.Messages.create({
+        this.create({
           userId: message.userId,
           title: message.title,
           content: message.content,
         }).then(() => {
           resolve();
+        });
+      });
+    }
+    static searchMessage(id) {
+      //メッセージのアップデートでidからメッセージを検索
+      return new Promise((resolve, reject) => {
+        db.Messages.findAll({ where: { id: id } }).then((message) => {
+          const messages = message[0].dataValues;
+          resolve(messages);
         });
       });
     }
