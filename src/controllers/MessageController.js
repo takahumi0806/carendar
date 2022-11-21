@@ -10,7 +10,7 @@ module.exports = {
     if (!req.params.id) {
       res.render('message', { user, messages: '', errorMessage: '' });
     }
-    const messages = await Users.searchMessage(req.params.id);
+    const messages = await models.Messages.searchMessage(req.params.id);
     res.render('message', { user, messages, errorMessage: '' });
   },
   async postMessage(req, res) {

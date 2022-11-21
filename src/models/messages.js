@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     static searchMessage(id) {
       //メッセージのアップデートでidからメッセージを検索
       return new Promise((resolve, reject) => {
-        db.Messages.findAll({ where: { id: id } }).then((message) => {
+        this.findAll({ where: { id: id } }).then((message) => {
           const messages = message[0].dataValues;
           resolve(messages);
         });
