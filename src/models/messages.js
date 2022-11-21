@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
 
   class Messages extends Model {
@@ -17,7 +15,21 @@ module.exports = (sequelize, DataTypes) => {
           targetKey: 'id'         
       })
     }
-
+    static allMessage() {
+      //メッセージとユーザーをリレーションしている
+      return new Promise((resolve, reject) => {
+        this.findAll({
+          include: 'user' ,
+        }).then((message) => {
+          message.sort((a, b) => {
+            if (a.id < b.id) return -1;
+            if (a.id > b.id) return 1;
+            return 0;
+          });
+          resolve(message);
+        });
+      });
+    }
   }
   Messages.init({
     title: DataTypes.STRING,

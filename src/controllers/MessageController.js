@@ -1,11 +1,12 @@
 const Users = require('../models/register');
+const models = require('../models')
 const { validationResult } = require('express-validator');
 module.exports = {
   async message(req, res) {
     if (!req.user) {
       res.redirect('/');
     }
-    const user = await Users.loginUser(req.user.token);
+    const user = await models.user.loginUser(req.user.token);
     if (!req.params.id) {
       res.render('message', { user, messages: '', errorMessage: '' });
     }
@@ -16,7 +17,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    const user = await Users.loginUser(req.user.token);
+    const user = await models.user.loginUser(req.user.token);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorsArray = errors.array();
@@ -28,7 +29,7 @@ module.exports = {
     } else {
       await Users.createMessage(req.body);
     }
-    const messages = await Users.allMessage();
+    const messages = await  models.Messages.allMessage();
     res.render('mypage', { user, messages });
   },
   async updateMessage(req, res) {
@@ -36,8 +37,8 @@ module.exports = {
       res.redirect('/');
     }
     await Users.updateMsg(req.params.id, req.body);
-    const messages = await Users.allMessage();
-    const user = await Users.loginUser(req.user.token);
+    const messages = await  models.Messages.allMessage();
+    const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
   async deleteMessage(req, res) {
@@ -45,8 +46,8 @@ module.exports = {
       res.redirect('/');
     }
     await Users.deleteMsg(req.params.id);
-    const messages = await Users.allMessage();
-    const user = await Users.loginUser(req.user.token);
+    const messages = await  models.Messages.allMessage();
+    const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
 };

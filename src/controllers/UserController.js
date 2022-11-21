@@ -1,4 +1,5 @@
 const Users = require('../models/register');
+const models = require('../models')
 module.exports = {
   getUser(req, res, error) {
     const err = req.flash('error');
@@ -10,8 +11,8 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    const messages = await Users.allMessage();
-    const user = await Users.loginUser(req.user.token);
+    const messages = await models.Messages.allMessage();
+    const user = await models.user.loginUser(req.user.token);
     if (!messages) {
       messages = [{ title: '', content: '', user: { name: '' } }];
       res.render('mypage', { user, messages });
