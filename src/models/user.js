@@ -25,6 +25,33 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
+    static postUser(user) {
+      //ユーザーを作成
+      return new Promise((resolve, reject) => {
+        this
+          .create({
+            name: user.name,
+            mail: user.mail,
+            password: user.password,
+            passwordconfirm: user.passwordconfirm,
+          })
+          .then(() => {
+            const token = jwt.sign(
+              { name: user.name, mail: user.mail, id: user.id },
+              'secret'
+            );
+            resolve(token);
+          });
+      });
+    }
+    static uniqueMail(user) {
+      //メールでユーザーを探す
+      return new Promise((resolve, reject) => {
+        this.findAll({ where: { mail: user } }).then((mail) => {
+          resolve(mail);
+        });
+      });
+    }
   }
   user.init(
     {

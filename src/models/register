@@ -4,31 +4,5 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  uniqueMail(user) {
-    //メールでユーザーを探す
-    return new Promise((resolve, reject) => {
-      db.user.findAll({ where: { mail: user } }).then((mail) => {
-        resolve(mail);
-      });
-    });
-  },
-  postUser(user) {
-    //ユーザーを作成
-    return new Promise((resolve, reject) => {
-      db.user
-        .create({
-          name: user.name,
-          mail: user.mail,
-          password: user.password,
-          passwordconfirm: user.passwordconfirm,
-        })
-        .then(() => {
-          const token = jwt.sign(
-            { name: user.name, mail: user.mail, id: user.id },
-            'secret'
-          );
-          resolve(token);
-        });
-    });
-  },
+
 };
