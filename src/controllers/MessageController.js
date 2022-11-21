@@ -36,7 +36,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    await Users.updateMsg(req.params.id, req.body);
+    await models.Messages.updateMsg(req.params.id, req.body);
     const messages = await  models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });

@@ -79,17 +79,17 @@ module.exports = {
   //     });
   //   });
   // },
-  updateMsg(id, messages) {
-    //メッセージをアップデートしている
-    return new Promise((resolve, reject) => {
-      const message = db.Messages.update(
-        { title: messages.title, content: messages.content },
-        { where: { id } }
-      );
-      console.log('OK')
-      resolve(message);
-    });
-  },
+  // updateMsg(id, messages) {
+  //   //メッセージをアップデートしている
+  //   return new Promise((resolve, reject) => {
+  //     const message = db.Messages.update(
+  //       { title: messages.title, content: messages.content },
+  //       { where: { id } }
+  //     );
+  //     console.log('OK')
+  //     resolve(message);
+  //   });
+  // },
   deleteMsg(id) {
     //メッセージ削除
     return new Promise((resolve, reject) => {

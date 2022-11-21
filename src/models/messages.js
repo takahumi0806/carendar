@@ -30,6 +30,17 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
+    static updateMsg(id, messages) {
+      //メッセージをアップデートしている
+      return new Promise((resolve, reject) => {
+        const message = this.update(
+          { title: messages.title, content: messages.content },
+          { where: { id } }
+        );
+        console.log('OK')
+        resolve(message);
+      });
+    }
   }
   Messages.init({
     title: DataTypes.STRING,
