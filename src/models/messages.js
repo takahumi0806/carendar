@@ -62,6 +62,17 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
+    static deleteMsg(id) {
+      //メッセージ削除
+      return new Promise((resolve, reject) => {
+        const message = this.findOne({
+          where: { id: id },
+        }).then((user) => {
+          user.destroy();
+        });
+        resolve(message);
+      });
+    }
   }
   Messages.init({
     title: DataTypes.STRING,
