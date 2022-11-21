@@ -31,18 +31,18 @@ module.exports = {
         });
     });
   },
-  createMessage(message) {
-    //メッセージを作成
-    return new Promise((resolve, reject) => {
-      db.Messages.create({
-        userId: message.userId,
-        title: message.title,
-        content: message.content,
-      }).then(() => {
-        resolve();
-      });
-    });
-  },
+  // createMessage(message) {
+  //   //メッセージを作成
+  //   return new Promise((resolve, reject) => {
+  //     db.Messages.create({
+  //       userId: message.userId,
+  //       title: message.title,
+  //       content: message.content,
+  //     }).then(() => {
+  //       resolve();
+  //     });
+  //   });
+  // },
   // allMessage() {
   //   //メッセージとユーザーをリレーションしている
   //   return new Promise((resolve, reject) => {

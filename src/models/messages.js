@@ -41,6 +41,18 @@ module.exports = (sequelize, DataTypes) => {
         resolve(message);
       });
     }
+    static createMessage(message) {
+      //メッセージを作成
+      return new Promise((resolve, reject) => {
+        db.Messages.create({
+          userId: message.userId,
+          title: message.title,
+          content: message.content,
+        }).then(() => {
+          resolve();
+        });
+      });
+    }
   }
   Messages.init({
     title: DataTypes.STRING,

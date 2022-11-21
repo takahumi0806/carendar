@@ -27,7 +27,7 @@ module.exports = {
         messages: '',
       });
     } else {
-      await Users.createMessage(req.body);
+      await models.Messages.createMessage(req.body);
     }
     const messages = await  models.Messages.allMessage();
     res.render('mypage', { user, messages });
