@@ -1,4 +1,4 @@
-const models = require('../models')
+const models = require('../models');
 const { validationResult } = require('express-validator');
 module.exports = {
   async message(req, res) {
@@ -28,7 +28,7 @@ module.exports = {
     } else {
       await models.Messages.createMessage(req.body);
     }
-    const messages = await  models.Messages.allMessage();
+    const messages = await models.Messages.allMessage();
     res.render('mypage', { user, messages });
   },
   async updateMessage(req, res) {
@@ -36,7 +36,7 @@ module.exports = {
       res.redirect('/');
     }
     await models.Messages.updateMsg(req.params.id, req.body);
-    const messages = await  models.Messages.allMessage();
+    const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
@@ -45,7 +45,7 @@ module.exports = {
       res.redirect('/');
     }
     await models.Messages.deleteMsg(req.params.id);
-    const messages = await  models.Messages.allMessage();
+    const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });
   },
