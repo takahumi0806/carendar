@@ -5,7 +5,7 @@ const authController = require('../controllers/AuthController.js');
 const PostController = require('../controllers/PostController');
 const passport = require('passport');
 const userRegistValidator = require('../validators/userRegistValidator');
-const messageRegistValidator = require('../validators/messageRegistValidoatr');
+const postRegistValidator = require('../validators/postRegistValidoatr');
 
 router.post(
   '/login',
@@ -21,7 +21,7 @@ router.get('/users', userController.myPage);
 router.get('/register', userController.register);
 router.post('/signup', userRegistValidator, authController.postUser);
 router.post('/logout', authController.logout);
-router.post('/messages', messageRegistValidator, PostController.postMessage);
+router.post('/messages', postRegistValidator, PostController.postMessage);
 router.get('/messages', PostController.message);
 router.get('/messages/:id', PostController.message);
 router.get('/messages/:id/delete', PostController.deleteMessage);

@@ -44,7 +44,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    await Users.deleteMsg(req.params.id);
+    await models.Messages.deleteMsg(req.params.id);
     const messages = await  models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     res.render('mypage', { user, messages });

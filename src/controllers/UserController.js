@@ -13,8 +13,7 @@ module.exports = {
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     if (!messages) {
-      messages = [{ title: '', content: '', user: { name: '' } }];
-      res.render('mypage', { user, messages });
+      res.render('mypage', { user, messages: '' });
     }
     res.render('mypage', { user, messages });
   },
