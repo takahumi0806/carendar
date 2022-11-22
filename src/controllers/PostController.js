@@ -1,4 +1,3 @@
-const Users = require('../models/register');
 const models = require('../models')
 const { validationResult } = require('express-validator');
 module.exports = {

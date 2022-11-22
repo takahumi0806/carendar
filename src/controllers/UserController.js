@@ -1,4 +1,3 @@
-const Users = require('../models/register');
 const models = require('../models')
 module.exports = {
   getUser(req, res, error) {

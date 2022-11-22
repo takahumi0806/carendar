@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const Users = require('./models/register');
+const models = require('./models')
 const jwt = require('jsonwebtoken');
 const flash = require('connect-flash');
 
@@ -42,7 +42,7 @@ app.use(passport.session());
 
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
-    const currentUser = await Users.uniqueMail(mail);
+    const currentUser = await models.user.uniqueMail(mail);
     if (!currentUser.length ||mail !== currentUser[0].mail ||password !== currentUser[0].password) {
       // Error
       return done(null, false, {
