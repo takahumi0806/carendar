@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       //ログインしているユーザーを探す
       return new Promise((resolve, reject) => {
         const user = jwt.verify(token, 'secret');
-        this.findAll({ where: { mail: user.mail } }).then((user) => {
-          const currentUser = user[0].dataValues;
+        this.findAll({ where: { mail: user.mail } }).then((users) => {
+          const currentUser = users[0].dataValues;
           resolve(currentUser);
         });
       });
