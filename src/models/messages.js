@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
           { title: messages.title, content: messages.content },
           { where: { id } }
         );
-        console.log('OK')
         resolve(message);
       });
     }
