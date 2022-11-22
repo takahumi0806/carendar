@@ -44,11 +44,11 @@ module.exports = (sequelize, DataTypes) => {
           });
       });
     }
-    static uniqueMail(user) {
+    static uniqueMail(mail) {
       //メールでユーザーを探す
       return new Promise((resolve, reject) => {
-        this.findAll({ where: { mail: user } }).then((mail) => {
-          resolve(mail);
+        this.findAll({ where: { mail } }).then((user) => {
+          resolve(user);
         });
       });
     }
