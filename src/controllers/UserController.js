@@ -1,4 +1,4 @@
-const models = require('../models')
+const models = require('../models');
 module.exports = {
   getUser(req, res, error) {
     const err = req.flash('error');
