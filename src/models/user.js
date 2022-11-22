@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         as: 'Messages',
       })
     } 
-    static loginUser(user) {
+    static loginUser(token) {
       //ログインしているユーザーを探す
       return new Promise((resolve, reject) => {
-        const mail = jwt.verify(user, 'secret');
-        this.findAll({ where: { mail: mail.mail } }).then((users) => {
-          const user = users[0].dataValues;
-          resolve(user);
+        const user = jwt.verify(token, 'secret');
+        this.findAll({ where: { mail: user.mail } }).then((users) => {
+          const currentUser = users[0].dataValues;
+          resolve(currentUser);
         });
       });
     }
