@@ -12,7 +12,7 @@ module.exports = {
     const messages = await models.Messages.searchMessage(req.params.id);
     res.render('message', { user, messages, errorMessage: '' });
   },
-  async postMessage(req, res) {
+  async newMessage(req, res) {
     if (!req.user) {
       res.redirect('/');
     }
