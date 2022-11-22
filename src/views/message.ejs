@@ -14,40 +14,18 @@
         <tr>
           <td>タイトル</td>
         </tr>
-        <% if(messages === '') { %>
-        <tr>
-          <td><input type="text" name="title" style="width: 1008px"></td>
-        </tr>
-        <% } else {%>
-          <td><input type="text" name="title" style="width: 1008px" value=
-            <%= messages.title %>
+          <td>
+            <input type="text" name="title" style="width: 1008px" value= <%= messages.title %> >
           </td>
-        <% } %> 
         <tr>
           <td>コンテンツ</td>
         </tr>
         <tr>
-        <% if(messages === '') { %>
           <td>
-            <textarea
-              name="content"
-              rows="4"
-              cols="40"
-              style="width: 1008px; height: 204px"
-            ></textarea>
-          </td>
-        <% } else {%>
-          <td>
-            <textarea
-              name="content"
-              rows="4"
-              cols="40"
-              style="width: 1008px; height: 204px"
-            >             
+            <textarea name="content"  rows="4"  cols="40" style="width: 1008px; height: 204px">        
               <%= messages.content %>
             </textarea>
           </td>
-        <% } %>
         </tr>
         <tr>
           <td>
