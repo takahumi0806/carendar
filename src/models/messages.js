@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
       //メッセージ削除
       return new Promise((resolve, reject) => {
         const message = this.findOne({
-          where: { id: id },
+          where: { id },
         }).then((user) => {
           user.destroy();
         });
