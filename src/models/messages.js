@@ -29,14 +29,14 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
-    static updateMsg(id, messages) {
+    static updateMsg(id, message) {
       //メッセージをアップデートしている
       return new Promise((resolve, reject) => {
-        const message = this.update(
-          { title: messages.title, content: messages.content },
+        const updateMessage = this.update(
+          { title: message.title, content: message.content },
           { where: { id } }
         );
-        resolve(message);
+        resolve(updateMessage);
       });
     }
     static createMessage(message) {
