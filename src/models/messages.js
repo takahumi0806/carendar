@@ -1,7 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-
   class Messages extends Model {
     /**
      * Helper method for defining associations.
@@ -11,15 +10,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Messages.belongsTo(models.user, {
-          foreignKey: 'userId', 
-          targetKey: 'id'         
-      })
+        foreignKey: 'userId',
+        targetKey: 'id',
+      });
     }
     static allMessage() {
       //メッセージとユーザーをリレーションしている
       return new Promise((resolve, reject) => {
         this.findAll({
-          include: 'user' ,
+          include: 'user',
         }).then((message) => {
           message.sort((a, b) => {
             if (a.id < b.id) return -1;
@@ -74,12 +73,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Messages.init({
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    userId: DataTypes.STRING
-  }, { 
-    sequelize,
-    modelName: 'Messages',
-  });
+      title: DataTypes.STRING,
+      content: DataTypes.STRING,
+      userId: DataTypes.STRING,
+    },{
+      sequelize,
+      modelName: 'Messages',
+    }
+  );
   return Messages;
 };
