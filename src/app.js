@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const Users = require('./models/register');
+const models = require('./models')
 const jwt = require('jsonwebtoken');
 const flash = require('connect-flash');
 
@@ -42,7 +42,7 @@ app.use(passport.session());
 
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
-    const currentUser = await Users.uniqueMail(mail);
+    const currentUser = await models.user.uniqueMail(mail);
     if (!currentUser.length ||mail !== currentUser[0].mail ||password !== currentUser[0].password) {
       // Error
       return done(null, false, {
@@ -51,6 +51,7 @@ passport.use(
     }
     // Success and return user information.
     return done(null, {
+      id: currentUser[0].id,
       username: currentUser[0].name,
       password: password,
       mail: mail,
@@ -62,12 +63,12 @@ passport.serializeUser((req, user, done) => {
   done(null, user);
   const token = jwt.sign(
     {
+      id: req.user.id,
       name: req.user.username,
-      email: req.user.mail,
+      mail: req.user.mail,
     },
     'secret'
   );
-  console.log(req.user)
   req.session.passport = { user: { token } };
 });
 passport.deserializeUser((user, done) => {

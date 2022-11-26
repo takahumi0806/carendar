@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-
+const models = require('../models');
 module.exports = {
   getUser(req, res, error) {
     const err = req.flash('error');
@@ -7,33 +6,20 @@ module.exports = {
       errorMessage: [{ msg: err[0] }],
     });
   },
-  myPage: (req, res) => {
+  async myPage(req, res) {
     if (!req.user) {
       res.redirect('/');
     }
-    const token = req.session.passport.user.token;
-    jwt.verify(token, 'secret', (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      res.render('mypage', { user });
-    });
+    const messages = await models.Messages.allMessage();
+    const user = await models.user.loginUser(req.user.token);
+    if (!messages) {
+      res.render('mypage', { user, messages: '' });
+    }
+    res.render('mypage', { user, messages });
   },
-  register: (req, res) => {
+  register(req, res) {
     res.render('register', {
       errorMessage: '',
-    });
-  },
-  message: (req, res) => {
-    if (!req.user) {
-      res.redirect('/');
-    }
-    const token = req.session.passport.user.token;
-    jwt.verify(token, 'secret', (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      res.render('message', { user });
     });
   },
 };
