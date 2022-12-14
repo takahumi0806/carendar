@@ -7,5 +7,60 @@
         '</form>';
       $('#append').append(logout);
     });
+    $(document).on('click', 'i', function () {
+      const messageId = $(this).attr('id');
+      const good = $(this).attr('class');
+      const sumLike = $(this).attr('value');
+      const controller = new AbortController();
+      console.log(controller)
+      $(`#heart${messageId}`).remove();
+      if ('fas fa-heart' == good) {
+        const like = Number(sumLike) - 1;
+        const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="far fa-heart">${like}</i></td>`;
+        $(`#message${messageId}`).append(heart);
+        console.log('発信')
+        axios.get(`/likes/${messageId}/delete`)
+        .then(response => {
+          console.log('成功')
+          console.log(response.data);
+        })
+        .catch(value => {
+          // 非同期処理が失敗した場合
+          console.log('失敗ですよいいね')
+          console.log('実行結果:' + value); // 呼ばれない
+        });
+        // getLists()
+        // $.ajax({
+        //   url: `/likes/${messageId}/delete`,
+        //   type: 'get',
+        // });
+      } else {
+        const like = Number(sumLike) + 1;
+        const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="fas fa-heart">${like}</i></td>`;
+        $(`#message${messageId}`).append(heart);
+        console.log('発信')
+        axios.post('/likes', {messageId})
+        .then(function (response) {
+          console.log('成功')
+          console.log(response.data);
+        })
+        .catch(function(value) {
+          // 非同期処理が失敗した場合
+          console.log('失敗ですよいいねできない')
+          console.log('実行結果:' + value); // 呼ばれない
+        });
+        // $.ajax({
+        //   url: '/likes',
+        //   type: 'post',
+        //   data: { messageId },
+        // })
+        // .done(function(data){
+        //   console.log(data)
+        // })
+      }
+    });
+    $('i').on('click', function () {
+      $('i').off('click');
+    });
   });
 </script>

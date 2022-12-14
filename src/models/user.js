@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         as: 'Messages',
       })
+      user.belongsToMany(models.user, {
+        through: models.MessageLikes,
+        foreignKey: 'userId',
+        otherKey: 'MessagesId',
+        as: 'likes'
+      });
     } 
     static loginUser(token) {
       //ログインしているユーザーを探す
@@ -52,6 +58,15 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
+    // static  userLike(){
+    //   return new Promise((resolve, reject) => {
+    //     this.findAll({
+    //       include: 'likes' ,
+    //     }).then((user) => {
+    //       resolve(user);
+    //     });
+    //   })
+    // }
   }
   user.init(
     {

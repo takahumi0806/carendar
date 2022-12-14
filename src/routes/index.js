@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/UserController');
 const authController = require('../controllers/AuthController.js');
 const PostController = require('../controllers/PostController');
+const MessagelikeController = require('../controllers/MessagelikeController');
 const passport = require('passport');
 const userRegistValidator = require('../validators/userRegistValidator');
 const postRegistValidator = require('../validators/postRegistValidoatr');
@@ -26,4 +27,6 @@ router.get('/messages', PostController.message);
 router.get('/messages/:id', PostController.message);
 router.get('/messages/:id/delete', PostController.deleteMessage);
 router.post('/messages/:id/update', PostController.updateMessage);
+router.post('/likes', MessagelikeController.addLike)
+router.get('/likes/:id/delete', MessagelikeController.deleteLike)
 module.exports = router;

@@ -12,10 +12,12 @@ module.exports = {
     }
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
+    
     if (!messages) {
       res.render('mypage', { user, messages: '' });
     }
-    res.render('mypage', { user, messages });
+    const likes = await models.Messages.countLike()
+    res.render('mypage', { user, messages, likes });
   },
   register(req, res) {
     res.render('register', {
