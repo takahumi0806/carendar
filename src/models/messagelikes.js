@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static async addlike(message, users){
+    static addlike(message, users){
       const user = jwt.verify(users.token, 'secret');
       this.create({
         userId: user.id,
