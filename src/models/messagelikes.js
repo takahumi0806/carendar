@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const { Model } = require('sequelize');
-const models = require('../models');
 module.exports = (sequelize, DataTypes) => {
   class MessageLikes extends Model {
     /**
