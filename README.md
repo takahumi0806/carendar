@@ -10,8 +10,6 @@
 
 # Requirement
 
-"hoge"を動かすのに必要なライブラリなどを列挙する
-
 - Docker version 20.10.5, build 55c4c88
 - node.js v16.9.1
 - mysql Ver 14.14
