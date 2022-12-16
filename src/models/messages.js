@@ -17,34 +17,30 @@ module.exports = (sequelize, DataTypes) => {
         through: models.MessageLikes,
         foreignKey: 'MessagesId',
         otherKey: 'userId',
-        as: 'likes'
+        as: 'likes',
       });
     }
     static allMessage() {
       //メッセージとユーザーをリレーションしている
       return new Promise((resolve, reject) => {
         this.findAll({
-          include: 'user' ,
-          order: [
-            ['id', 'ASC']
-          ]
+          include: 'user',
+          order: [['id', 'ASC']],
         }).then((message) => {
           resolve(message);
         });
       });
     }
-    static countLike(){
-      //メッセージにいいねをリレーション 
+    static countLike() {
+      //メッセージにいいねをリレーション
       return new Promise((resolve, reject) => {
         this.findAll({
-          include: 'likes' ,
-          order: [
-            ['id', 'ASC']
-          ]
+          include: 'likes',
+          order: [['id', 'ASC']],
         }).then((likes) => {
           resolve(likes);
-        })
-      })
+        });
+      });
     }
     static updateMsg(id, message) {
       //メッセージをアップデートしている
@@ -90,13 +86,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Messages.init({
-      title: DataTypes.STRING,
-      content: DataTypes.STRING,
-      userId: DataTypes.STRING,
+    title: DataTypes.STRING,
+    content: DataTypes.STRING,
+    userId: DataTypes.STRING,
     },{
-      sequelize,
-      modelName: 'Messages',
-    }
-  );
+    sequelize,
+    modelName: 'Messages',
+  });
   return Messages;
 };
