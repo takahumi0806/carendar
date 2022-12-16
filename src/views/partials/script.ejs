@@ -16,12 +16,12 @@
         const like = Number(sumLike) - 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="far fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        axios.get(`/likes/${messageId}/delete`)
+        axios.get(`/likes/${messageId}/delete`);
       } else {
         const like = Number(sumLike) + 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="fas fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        axios.post('/likes', {messageId})
+        axios.post('/likes', { messageId });
       }
     });
     $('i').on('click', function () {
