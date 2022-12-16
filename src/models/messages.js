@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     static countLike(){
-      //メッセージにいいねをリレーション いいねの数を数える
+      //メッセージにいいねをリレーション 
       return new Promise((resolve, reject) => {
         this.findAll({
           include: 'likes' ,

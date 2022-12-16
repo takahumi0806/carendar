@@ -2,9 +2,8 @@
 const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+const models = require('../models');
 module.exports = (sequelize, DataTypes) => {
   class MessageLikes extends Model {
     /**
@@ -15,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static addlike(message, users){
+    static async addlike(message, users){
       const user = jwt.verify(users.token, 'secret');
       this.create({
         userId: user.id,
@@ -24,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     }
     static deletelike(message, users){
       const user = jwt.verify(users.token, 'secret');
-      console.log('発信きたよ')
       this.findAll({
         where: {
           [Op.and]: {
@@ -34,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }).then(like => {
         like[0].destroy()
-        resolve(like);
       });
     }
   }

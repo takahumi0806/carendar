@@ -27,6 +27,6 @@ router.get('/messages', PostController.message);
 router.get('/messages/:id', PostController.message);
 router.get('/messages/:id/delete', PostController.deleteMessage);
 router.post('/messages/:id/update', PostController.updateMessage);
-router.post('/likes', MessagelikeController.addLike)
-router.get('/likes/:id/delete', MessagelikeController.deleteLike)
+router.post('/likes', MessagelikeController.addLike);
+router.get('/likes/:id/delete', MessagelikeController.deleteLike);
 module.exports = router;

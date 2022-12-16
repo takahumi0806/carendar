@@ -12,7 +12,6 @@ module.exports = {
     }
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
-    
     if (!messages) {
       res.render('mypage', { user, messages: '' });
     }
