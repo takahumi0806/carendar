@@ -4,7 +4,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    await models.MessageLikes.addlike(req.body, req.user)
+    await models.MessageLikes.addlike(req.body, req.user);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     const likes = await models.Messages.countLike()
@@ -14,7 +14,7 @@ module.exports = {
     if (!req.user) {
       res.redirect('/');
     }
-    await models.MessageLikes.deletelike(req.params.id, req.user)
+    await models.MessageLikes.deletelike(req.params.id, req.user);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
     const likes = await models.Messages.countLike()

@@ -13,24 +13,24 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static addlike(message, users){
+    static addlike(message, users) {
       const user = jwt.verify(users.token, 'secret');
       this.create({
         userId: user.id,
-        MessagesId: message.messageId
-      })
+        MessagesId: message.messageId,
+      });
     }
-    static deletelike(message, users){
+    static deletelike(message, users) {
       const user = jwt.verify(users.token, 'secret');
       this.findAll({
         where: {
           [Op.and]: {
             userId: user.id,
-            MessagesId: message
-          }
-        }
-      }).then(like => {
-        like[0].destroy()
+            MessagesId: message,
+          },
+        },
+      }).then((like) => {
+        like[0].destroy();
       });
     }
   }
