@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
-    static countLike() {
+    static likeCount() {
       //メッセージにいいねをリレーション
       return new Promise((resolve, reject) => {
         this.findAll({
