@@ -9,19 +9,29 @@
     });
     $(document).on('click', 'i', function () {
       const messageId = $(this).attr('id');
-      const myLike = $(this).attr('class');
+      const mylike = $(this).attr('class');
       const sumLike = $(this).attr('value');
       $(`#heart${messageId}`).remove();
-      if ('fas fa-heart' == myLike) {
+      if ('fas fa-heart' == mylike) {
         const like = Number(sumLike) - 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="far fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        axios.get(`/likes/${messageId}/delete`);
+        console.log('通信')
+        axios.get(`/likes/${messageId}/delete`)
+        .then(function(value) {
+    // 非同期処理が成功した場合
+    console.log('実行結果:' + value); // => 実行結果:成功!
+  })
       } else {
         const like = Number(sumLike) + 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="fas fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        axios.post('/likes', { messageId });
+        console.log('通信')
+        axios.post('/likes', {messageId})
+          .then(function(value) {
+    // 非同期処理が成功した場合
+    console.log('実行結果:' + value); // => 実行結果:成功!
+  })
       }
     });
     $('i').on('click', function () {
