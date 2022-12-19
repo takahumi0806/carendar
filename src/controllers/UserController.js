@@ -15,8 +15,8 @@ module.exports = {
     if (!messages) {
       res.render('mypage', { user, messages: '' });
     }
-    const likes = await models.Messages.likeCount()
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount()
+    res.render('mypage', { user, messages, likeCount });
   },
   register(req, res) {
     res.render('register', {

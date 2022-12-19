@@ -7,8 +7,8 @@ module.exports = {
     await models.MessageLikes.addlike(req.body, req.user);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
-    const likes = await models.Messages.likeCount();
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount();
+    res.render('mypage', { user, messages, likeCount });
   },
   async deleteLike(req, res) {
     if (!req.user) {
@@ -17,7 +17,7 @@ module.exports = {
     await models.MessageLikes.deletelike(req.params.id, req.user);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
-    const likes = await models.Messages.likeCount();
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount();
+    res.render('mypage', { user, messages, likeCount });
   },
 };

@@ -29,8 +29,8 @@ module.exports = {
       await models.Messages.createMessage(req.body);
     }
     const messages = await models.Messages.allMessage();
-    const likes = await models.Messages.likeCount()
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount()
+    res.render('mypage', { user, messages, likeCount });
   },
   async updateMessage(req, res) {
     if (!req.user) {
@@ -39,8 +39,8 @@ module.exports = {
     await models.Messages.updateMsg(req.params.id, req.body);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
-    const likes = await models.Messages.likeCount()
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount()
+    res.render('mypage', { user, messages, likeCount });
   },
   async deleteMessage(req, res) {
     if (!req.user) {
@@ -49,7 +49,7 @@ module.exports = {
     await models.Messages.deleteMsg(req.params.id);
     const messages = await models.Messages.allMessage();
     const user = await models.user.loginUser(req.user.token);
-    const likes = await models.Messages.likeCount()
-    res.render('mypage', { user, messages, likes });
+    const likeCount = await models.Messages.likeCount()
+    res.render('mypage', { user, messages, likeCount });
   },
 };
