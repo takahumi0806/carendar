@@ -16,22 +16,12 @@
         const like = Number(sumLike) - 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="far fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        console.log('通信')
         axios.get(`/likes/${messageId}/delete`)
-        .then(function(value) {
-    // 非同期処理が成功した場合
-    console.log('実行結果:' + value); // => 実行結果:成功!
-  })
       } else {
         const like = Number(sumLike) + 1;
         const heart = `<td id="heart${messageId}"><i id=${messageId} value="${like}" class="fas fa-heart">${like}</i></td>`;
         $(`#message${messageId}`).append(heart);
-        console.log('通信')
         axios.post('/likes', {messageId})
-          .then(function(value) {
-    // 非同期処理が成功した場合
-    console.log('実行結果:' + value); // => 実行結果:成功!
-  })
       }
     });
     $('i').on('click', function () {
