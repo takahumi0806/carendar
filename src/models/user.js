@@ -13,8 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       user.hasMany(models.Messages, {
         foreignKey: 'userId',
         as: 'Messages',
-      })
-    } 
+      });
+      user.belongsToMany(models.user, {
+        through: models.MessageLikes,
+        foreignKey: 'userId',
+        otherKey: 'MessagesId',
+        as: 'likes',
+      });
+    }
     static loginUser(token) {
       //ログインしているユーザーを探す
       return new Promise((resolve, reject) => {
@@ -25,23 +31,27 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }
-    static postUser(user) {
+    static postUser(users) {
       //ユーザーを作成
       return new Promise((resolve, reject) => {
-        this
-          .create({
-            name: user.name,
-            mail: user.mail,
-            password: user.password,
-            passwordconfirm: user.passwordconfirm,
-          })
-          .then(() => {
+        this.create({
+          name: users.name,
+          mail: users.mail,
+          password: users.password,
+          passwordconfirm: users.passwordconfirm,
+        }).then(() => {
+          this.findAll({ where: { mail: users.mail } }).then((user) => {
             const token = jwt.sign(
-              { name: user.name, mail: user.mail, id: user.id },
+              {
+                name: user[0].dataValues.name,
+                mail: user[0].dataValues.mail,
+                id: user[0].dataValues.id,
+              },
               'secret'
             );
             resolve(token);
           });
+        });
       });
     }
     static uniqueMail(mail) {
@@ -53,18 +63,14 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  user.init(
-    {
-      name: DataTypes.STRING,
-      mail: DataTypes.STRING,
-      password: DataTypes.STRING,
-      passwordconfirm: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      modelName: 'user',
-    }
-  );
-  
+  user.init({
+    name: DataTypes.STRING,
+    mail: DataTypes.STRING,
+    password: DataTypes.STRING,
+    passwordconfirm: DataTypes.STRING,
+    },{
+    sequelize,
+    modelName: 'user',
+  });
   return user;
 };

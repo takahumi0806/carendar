@@ -13,19 +13,32 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         targetKey: 'id',
       });
+      Messages.belongsToMany(models.user, {
+        through: models.MessageLikes,
+        foreignKey: 'MessagesId',
+        otherKey: 'userId',
+        as: 'likes',
+      });
     }
     static allMessage() {
       //メッセージとユーザーをリレーションしている
       return new Promise((resolve, reject) => {
         this.findAll({
           include: 'user',
+          order: [['id', 'ASC']],
         }).then((message) => {
-          message.sort((a, b) => {
-            if (a.id < b.id) return -1;
-            if (a.id > b.id) return 1;
-            return 0;
-          });
           resolve(message);
+        });
+      });
+    }
+    static likeCount() {
+      //メッセージにいいねをリレーション
+      return new Promise((resolve, reject) => {
+        this.findAll({
+          include: 'likes',
+          order: [['id', 'ASC']],
+        }).then((likes) => {
+          resolve(likes);
         });
       });
     }
@@ -65,21 +78,20 @@ module.exports = (sequelize, DataTypes) => {
       return new Promise((resolve, reject) => {
         const message = this.findOne({
           where: { id },
-        }).then((user) => {
-          user.destroy();
+        }).then((post) => {
+          post.destroy();
         });
         resolve(message);
       });
     }
   }
   Messages.init({
-      title: DataTypes.STRING,
-      content: DataTypes.STRING,
-      userId: DataTypes.STRING,
+    title: DataTypes.STRING,
+    content: DataTypes.STRING,
+    userId: DataTypes.STRING,
     },{
-      sequelize,
-      modelName: 'Messages',
-    }
-  );
+    sequelize,
+    modelName: 'Messages',
+  });
   return Messages;
 };

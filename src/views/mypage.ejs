@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-
-
 <html lang="ja">
   <head>
     <%- include('../views/partials/head'); %>
@@ -8,19 +6,23 @@
   <body>
     <header><%- include('../views/partials/headerLogin'); %></header>
     <span id="append"></span>
-    <% messages.forEach((message) => { %>
+    <% messages.forEach((message, i) => { %>
     <table align="center" id="bord">
       <tr>
         <td style="width: 1008px">タイトル: <%= message.dataValues.title %></td>
       </tr>
       <tr>
-        <td tyle="width: 1008px">コンテント: <%= message.dataValues.content %> </td>
+        <td tyle="width: 1008px">コンテント: <%= message.dataValues.content %></td>
       </tr>
       <tr>
-        <td tyle="width: 1008px">投稿者:<%= message.user.name %></td>
+        <td tyle="width: 1008px" >投稿者:<%= message.user.name %></td>
       </tr>
-      <tr>
-        <td tyle="width: 1008px"><i class="far fa-heart"></i>0</td>
+      <tr id ="message<%=message.dataValues.id%>">
+        <% if(""==likeCount[i].likes.filter(function(like){ return like.dataValues.id === user.id; })){ %>
+          <td id="heart<%=message.dataValues.id%>"><i id="<%=message.dataValues.id%>" value="<%= likeCount[i].likes.length %>" class="far fa-heart"><%= likeCount[i].likes.length %></i></td>
+        <% } else {%>
+          <td id="heart<%=message.dataValues.id%>"><i id="<%=message.dataValues.id%>" value="<%= likeCount[i].likes.length %>" class="fas fa-heart"><%= likeCount[i].likes.length %></i></td>
+        <% } %>
       </tr>
       <% if(user.id === message.dataValues.userId) { %>
         <tr>
