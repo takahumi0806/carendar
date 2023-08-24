@@ -24,7 +24,6 @@ app.use(
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,10 +35,8 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
     const currentUser = await models.user.uniqueMail(mail);
@@ -58,7 +55,6 @@ passport.use(
     });
   })
 );
-
 passport.serializeUser((req, user, done) => {
   done(null, user);
   const token = jwt.sign(
@@ -74,7 +70,6 @@ passport.serializeUser((req, user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
-
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -86,7 +81,6 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
