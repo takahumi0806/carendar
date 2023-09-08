@@ -1,0 +1,51 @@
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>2023 Calendar</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <form method="POST" action="/register">
+    <table align="center">
+      <thead>
+        <tr>
+          <th class="register topth"><h1 class="registerh1">ユーザー登録をしてください</h1></th>
+        </tr>
+        </thead>
+      <tr>
+        <td class="register">name</td>
+      </tr>
+      <tr>
+        <td class="register"><input type="text" name="name" style="width:250px"/></td>
+      </tr>
+      <tr>
+        <td class="register">E-mail Address</td>
+      </tr>
+      <tr>
+        <td class="register"><input type="email" name="mail" style="width:250px"/></td>
+      </tr>
+      <tr>
+        <td class="register">Password</td>
+      </tr>
+      <tr>
+        <td class="register"><input type="password" name="password" style="width:250px"/></td>
+      </tr>
+      <tr>
+        <td class="register">password確認用</td>
+      </tr>
+      <tr>
+        <td class="register"><input type="password" name="passwordconfirm" style="width:250px"/></td>
+      </tr>
+      <tr>
+        <td class="register">
+          <button  class="btn btn-primary btn-lg">登録</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <%- include('../views/partials/error'); %>
+  <a href="/" id="registerBack" class="btn btn-secondary btn-lg">戻る</a>
+</html>

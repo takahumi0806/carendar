@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>2023 Calendar</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <% if(userPattern.length){ %>
+    <form id="patternForm" name="patternForm" method="POST" action="/pattern/<%=userId.id%>/update">
+  <% } else {%>
+    <form id="patternForm" name="patternForm" method="POST" action="/pattern">
+  <% } %>
+    <label for="startDay">パターンを開始する日付を選択してください</label>
+    <% if(userPattern.length){ %>
+      <input type="date" id="startDay" name="startDate" value="<%=userPattern[0].dataValues.startDate%>">
+    <% } else {%>
+      <input type="date" id="startDay" name="startDate">
+    <% } %>
+    <a href="/myPage" class="patternButton">戻る</a>
+    <table class="patternTable" id="patternTable">
+      <thead>
+        <tr>
+          <th></th>
+          <th>開始時間</th>
+          <th>休み</th>
+          <th>削除</th>
+        </tr>
+      </thead>
+      <% if(userPattern.length){ %>
+        <% for (var i = 0; i < userPattern[0].dataValues.pattern.split(',').length; i++) { %>
+          <tr class="patternTr" id="patternTr<%=i+1%>" value="<%=i+1%>">
+            <th class="patternTh" id="patternTh<%=i+1%>">パターン<%=i+1%></th>
+            <td class="patternTd"  id="startTime<%=i+1%>" value="<%=i+1%>"><input type="time" class="patternStart" id="patternStart<%=i+1%>" name="patternStart<%=i+1%>" value="<%=userPattern[0].dataValues.pattern.split(',')[i]%>"></td>
+              <% if(userPattern[0].dataValues.pattern.split(',')[i]=="休"){ %>
+            <td class="patternHoliday" id="<%=i+1%>"><input type="checkbox"  name="patternHoliday<%=i+1%>" id="patternHoliday<%=i+1%>" checked="checked" value="休">休</td>
+              <% } else {%>
+            <td class="patternHoliday" id="<%=i+1%>"><input type="checkbox"  name="patternHoliday<%=i+1%>" id="patternHoliday<%=i+1%>"  value="休">休</td>
+              <% } %>
+            <td class="patternDelete" id="patternDelete<%=i+1%>" value="<%=i+1%>">消</td>
+          </tr>
+        <% } %>
+        <tr class="patternTr" id="patternTr<%=userPattern[0].dataValues.pattern.split(',').length+1%>" value="<%=userPattern[0].dataValues.pattern.split(',').length+1%>">
+          <th class="patternTh" id="patternTh<%=i+1%>">パターン<%=userPattern[0].dataValues.pattern.split(',').length+1%></th>
+          <td class="patternTd"  id="startTime<%=userPattern[0].dataValues.pattern.split(',').length+1%>" value="<%=userPattern[0].dataValues.pattern.split(',').length+1%>"><input type="time" class="patternStart" id="patternStart<%=userPattern[0].dataValues.pattern.split(',').length+1%>" name="patternStart<%=userPattern[0].dataValues.pattern.split(',').length+1%>" value="<%=userPattern[0].dataValues.pattern.split(',').length+1%>"></td>
+          <td class="patternHoliday" id="<%=userPattern[0].dataValues.pattern.split(',').length+1%>"><input type="checkbox"  name="patternHoliday<%=userPattern[0].dataValues.pattern.split(',').length+1%>" id="patternHoliday<%=userPattern[0].dataValues.pattern.split(',').length+1%>" value="休">休</td>
+          <td class="patternDelete" id="patternDelete<%=userPattern[0].dataValues.pattern.split(',').length+1%>" value="<%=userPattern[0].dataValues.pattern.split(',').length+1%>">消</td>
+        </tr>
+      <% } else {%>
+        <tr class="patternTr" id="patternTr1>" value="1">
+          <th class="patternTh" id="patternTh1">パターン1</th>
+          <td class="patternTd"  id="startTime1" value="1"><input type="time" class="patternStart" id="patternStart1" name="patternStart1" value=""></td>
+          <td class="patternHoliday" id="1"><input type="checkbox"  name="patternHoliday1" id="patternHoliday1" value="休">休</td>
+          <td class="patternDelete" id="patternDelete1" value="1">消</td>
+        </tr>
+      <% } %>
+      <%- include('partials/error') %>
+  </table>
+    <% if(userPattern.length){ %>
+      <button type="submit" class="btn btn-primary btn-lg" id="patternButton">更新</button>
+      <a href="/pattern/<%=userId.id%>/delete" class="btn btn-danger btn-lg" id="patternDeleteButton">削除</a>
+    <% } else {%>
+      <button type="submit" class="btn btn-primary btn-lg" id="patternButton">決定</button>
+    <% } %>
+  </form>
+  <div id="easyModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modalday"></span>
+        <span class="modalClose">✖️</span>
+      </div>
+      <div class="modal-body">
+        <div id='userdisplay'></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const pattern =document.getElementsByClassName('patternTr')
+    const table = document.getElementById('patternTable')
+    $(document).off('change', '.patternTr')
+    $(document).on('change', '.patternTr', function(e){
+      const txt1 = document.getElementById(`${this.id}`);
+      const number = document.getElementById(`patternTh${txt1.getAttribute('value')}`).innerHTML.slice(4)
+      const check = document.getElementById(`patternTr${txt1.getAttribute('value')}`)
+      const patternId = pattern.length+1
+      const additionPattern =`<tr class="patternTr" id="patternTr${patternId}" value="${patternId}">
+                                <th class="patternTh" id="patternTh${patternId}">パターン${patternId}</th>
+                                  <td class="patternTd" id="startTime${patternId}" value="${patternId}"><input type="time" name="patternStart${patternId}"class="patternStart" id="patternStart${patternId}" value=""></td>
+                                  <td class="patternHoliday" id="${patternId}" value='${patternId}'><input type="checkbox" name="patternHoliday${patternId}" id="patternHoliday${patternId}" value="休">休</td>
+                                  <td class="patternDelete" id="patternDelete${patternId}" value="${patternId}">消</td>
+                              </tr>`
+      if(pattern.length==number){
+        $('.patternTable').append(additionPattern);
+      }
+    })
+    $(document).off('change', '.patternHoliday')
+    $(document).on('change', '.patternHoliday', function(e){
+      const target = document.getElementById(`${$(this).attr('id')}`);
+      const time = target.previousElementSibling
+      if($(`input[name="patternHoliday${target.id}"]`).is(':checked')){
+        time.firstElementChild.value = ""
+      } else {
+        time.firstElementChild.value = "00:00"
+      }
+    })
+    $(document).off('change', '.patternTd')
+    $(document).on('change', '.patternTd', function(e){
+      const txt1 = document.getElementById(`${this.id}`);
+      const check = document.getElementById(`patternHoliday${txt1.getAttribute('value')}`)
+      check.checked = false;
+    })
+    $(document).off('click', '.patternDelete')
+    $(document).on('click', '.patternDelete', function(){
+      const deleteClass = pattern.length 
+      if(pattern.length>1){
+        $(`#patternTr${$(this).attr('value')}`).remove();
+        for(var i = `${$(this).attr('value')}`; i < deleteClass ; i++){
+          if($(`input[name="patternHoliday${Number(i)+1}"]`).is(':checked')){
+            $(`#patternTr${Number(i)+1}`).remove();
+            const additionPattern =`<tr class="patternTr" id="patternTr${i}" value="${i}">
+                                  <th class="patternTh" id="patternTh${i}">パターン${i}</th>
+                                    <td class="patternTd" id="startTime${i}" value="${i}"><input type="time" name="patternStart${i}"class="patternStart" id="patternStart${i}" value=""></td>
+                                    <td class="patternHoliday" id="${i}" value='${i}'><input type="checkbox" name="patternHoliday${i}" id="patternHoliday${i}" value="休" checked>休</td>
+                                    <td class="patternDelete" id="patternDelete${i}" value="${i}">消</td>
+                                </tr>`
+                                $('.patternTable').append(additionPattern)
+          } else if(document.getElementById(`patternStart${Number(i)+1}`).value) {
+            const time =document.getElementById(`patternStart${Number(i)+1}`).value
+            $(`#patternTr${Number(i)+1}`).remove();
+            const additionPattern =`<tr class="patternTr" id="patternTr${i}" value="${i}">
+                                  <th class="patternTh" id="patternTh${i}">パターン${i}</th>
+                                    <td class="patternTd" id="startTime${i}" value="${i}"><input type="time" name="patternStart${i}"class="patternStart" id="patternStart${i}" value=${time}></td>
+                                    <td class="patternHoliday" id="${i}" value='${i}'><input type="checkbox" name="patternHoliday${i}" id="patternHoliday${i}" value="休" >休</td>
+                                    <td class="patternDelete" id="patternDelete${i}" value="${i}">消</td>
+                                </tr>`
+            $('.patternTable').append(additionPattern)
+          }else{
+            $(`#patternTr${Number(i)+1}`).remove();
+            const additionPattern =`<tr class="patternTr" id="patternTr${i}" value="${i}">
+                                  <th class="patternTh" id="patternTh${i}">パターン${i}</th>
+                                    <td class="patternTd" id="startTime${i}" value="${i}"><input type="time" name="patternStart${i}"class="patternStart" id="patternStart${i}" value=""></td>
+                                    <td class="patternHoliday" id="${i}" value='${i}'><input type="checkbox" name="patternHoliday${i}" id="patternHoliday${i}" value="休" >休</td>
+                                    <td class="patternDelete" id="patternDelete${i}" value="${i}">消</td>
+                                </tr>`
+            $('.patternTable').append(additionPattern)
+          }
+        }
+      }
+    })
+  </script>
+</html>

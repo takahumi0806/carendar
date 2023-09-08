@@ -39,7 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(
   new LocalStrategy(async (mail, password, done) => {
-    const currentUser = await models.user.uniqueMail(mail);
+    const currentUser = await models.Users.uniqueMail(mail);
     if (!currentUser.length ||mail !== currentUser[0].mail ||password !== currentUser[0].password) {
       // Error
       return done(null, false, {

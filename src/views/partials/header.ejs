@@ -1,0 +1,67 @@
+
+<header class="headerNav">
+  <uL class="headerNav" id="headerNav">
+    <% if(userId.length == 0){%>
+      <li ><a class="goManth goNext" id="<%= next[3] %>,<%=today[1]-1%>,<%=next[1]%>" value=""> ＜＜Back</a></li>
+      <li class="goManth" id="topYearMonth"><%= today[0] %>.<%= today[1] %></li>
+      <li><a class="goManth goNext"  aria-current="page" id="<%= today[0] %>,<%=today[1]+1%>,<%=next[1]%>" value="">Next＞＞</a></li>
+    <% }else if( user  == ""){ %>
+      <li ><a class="goManth goNext" id="<%= next[3] %>,<%=today[1]-1%>,<%=next[1]%>,<%=userId.id%>,<%= user.name%>,<%= startPattren[0] %>" value="<% if(patterns.length){%><%=patterns[0].dataValues.pattern.split(',')%><% } %>"> ＜＜Back</a></li>
+      <li class="goManth" id="topYearMonth"><%= today[0] %>.<%= today[1] %></li>
+      <li><a class="goManth goNext"  aria-current="page" id="<%= today[0] %>,<%=today[1]+1%>,<%=next[1]%>,<%=userId.id%>,<%= user.name%>,<%= startPattren[0] %>" value="<% if(patterns.length){%><%=patterns[0].dataValues.pattern.split(',')%><% } %>">Next＞＞</a></li>
+    <% } else {%>
+      <li ><a class="goManth goNext" id="<%= next[3] %>,<%=today[1]-1%>,<%=next[1]%>,<%=userId[0].dataValues.id%>,<%= user.name%>,<%= startPattren[0]  %>" value="<% if(patterns.length){%><%=patterns[0].dataValues.pattern.split(',')%><% } %>"> ＜＜Back</a></li>
+      <li class="goManth" id="topYearMonth"><%= today[0] %>.<%= today[1] %></li>
+      <li><a class="goManth goNext"  aria-current="page" id="<%= today[0] %>,<%=today[1]+1%>,<%=next[1]%>,<%=userId[0].dataValues.id%>,<%= user.name%>,<%= startPattren[0] %>" value="<% if(patterns.length){%><%=patterns[0].dataValues.pattern.split(',')%><% } %>">Next＞＞</a></li>
+    <% } %>
+  </uL>
+  <uL class="headerNav">
+    <li class="formCss"> 
+      <% if(userId.length == 0){%>
+        <form action="/login" method="POST">
+          email:<input type="email" name="username" />
+          password:<input type="password" name="password" />
+          <input type="submit" value="Login" />
+        </form>
+      <% } else {%>
+        <form class="d-flex" name="myform">
+          <input class="form-control me-2" id='formUser'name="mytext" type="search" placeholder="ユーザー名を入れて下さい" aria-label="Search" style="width:230px">
+          <button type="button" id="btn" class="btn btn-primary">Search</button>
+        </form>
+      <%}%>   
+    </li>
+    <span id="userName" ></span>
+    <% if(userId.length == 0){%>
+
+    <% }else if( user  == ""){ %>
+      <li id="lookName">自分のカレンダー</li>
+    <% } else {%>
+      <li id="lookName"><%=userId[0].dataValues.name%>さんのカレンダー</li>
+    <% } %>
+    <% if(userId.length == 0){%>
+      <li><a href="/register" id="registerUser" class="btn btn-primary">新規登録</a></li>
+    <% } else {%>
+    <li id="topUserName">
+      <span aria-current="page">
+        <% if( user  == ""){ %>
+          ようこそ<a href="/myCare/<%=userId.id%>"><%=userId.name%></a>さん
+        <% } else {%>
+          ようこそ<a href="/myCare/<%=user.id%>"><%= user.name%></a>さん
+        <% } %>
+      </span>
+    </li>
+    <% if( user  == ""){ %>
+      <li class="formCss">
+        <form action="/logout" method="post">
+          <input type="submit" value="ログアウト">
+        </form>
+      </li>
+    <% } else {%>
+      <li class="formCss"></li>
+      <a href="/"id="mycalendar">Myカレンダーへ</a>
+      </li>
+    <% } %>
+  </li>
+    <% } %>
+  </uL>
+</header>

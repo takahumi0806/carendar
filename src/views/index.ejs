@@ -1,0 +1,508 @@
+<html>
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+      <meta charset="UTF-8">
+      <title>Calendar</title>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+      <link rel="stylesheet" href="/stylesheets/style.css" />
+    </head>
+    <body>
+      <%- include('../views/partials/error'); %>
+      <%- include('partials/header') %>
+      <div class="calendar-container">
+        <div id='yearMonthappend'></div>
+        <table class="calendar">
+          <tr>
+            <th>SUN</th><th>MON</th> <th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
+          </tr>
+            <% for (var a = 0; a < 6; a++) { %>
+              <tr class="day">
+              <% for (var i = -sometime; i < 7-sometime; i++) { %>
+                <%if( i+1+(7*a)>  endMonthDay ) {%>
+                  <%if(7+(-sometime-i)===7){%>
+                    <% break %>
+                  <% } %>
+                  <td></td>
+                <% } else if(i+1+(7*a)< 1 ) {%>
+                  <td></td>
+                <% } else { %> 
+                  <%if( userId.length == 0) {%>
+                    <td id="<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>" class='<%=i+1+(7*a)%>'value="<%= userId.id %>,<%= user.name %>">
+                  <%} else {%>
+                    <td id="<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>" class='<%=i+1+(7*a)%> td'value="<%= userId.id %>,<%= user.name %>" >
+                  <% } %>
+                  <div class="tdTop">
+                    <div class="date"><%= i+1+(7*a) %>日</div> 
+                    <% if(patterns.length && i+1+(7*a)+startPattren[1] >= 0){%> 
+                      <div><%= patterns[0].dataValues.pattern.split(',')[(i+(7*a)+startPattren[1]+1)%patterns[0].dataValues.pattern.split(',').length] %></div>
+                    <% } %>
+                  </div>
+                    <% for (var b =0; b < monthSchedules.length; b++ ) {%>
+                      <% if(i+1+(7*a) < 31){ %>
+                        <% if(Number(String(monthSchedules[b].date).slice(8, 10)) === Number(i+01+(7*a))) {%>
+                          <div id="schedule<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>" value="<%= monthSchedules[b].id%>,<%= monthSchedules[b].id%>">
+                            <span class="scheduleTime" id="scheduleTime<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>"><%= monthSchedules[b].time.slice(0 ,5)%></span>
+                            <span id="scheduleContent<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>" class="scheduleContent scheduleTime"><%= monthSchedules[b].content %></span>
+                            <div id="scheduleDisplayContent<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>" class="scheduleDisplayContent"><%= monthSchedules[b].content.slice(0, 10) %></div>
+                            <div class="scheduleTime">
+                              <span class='joinUserDisplay<%=i+1+(7*a)%>' id='joinUserDisplay<%= today[0] %>/<%=today[1]%>/<%=i+1+(7*a)%>'><% for (var c =0; c < monthSchedules[b].dataValues.join.length; c++ ) {%>
+                                <span class="joinusers" id="joinUser<%= monthSchedules[b].dataValues.id%><%= monthSchedules[b].dataValues.join[c].name %>"><%= monthSchedules[b].dataValues.join[c].name%>さん</span><%}%>
+                              </span>
+                            </div>
+                          </div>
+                        <% } %>
+                      <% } %>
+                    <% } %>
+                  </td>
+                <% } %>
+              <% } %>
+              </tr>
+            <% } %>
+        </table>
+      </div>
+      <div id="easyModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="modalday"></span>
+            <span class="modalClose">✖️</span>
+          </div>
+          <div class="modal-body">
+            <div id='userdisplay'></div>
+          </div>
+        </div>
+      </div>
+    </body>
+    <script>
+      $(document).ready(function(){
+        $(document).off('click', '#btn')
+        $(document).on('click', '#btn', function (e) {
+          e.preventDefault();
+          $('.userName').remove();
+          if(!document.myform.mytext.value==""){
+            $.getJSON('/search/?id=' + document.myform.mytext.value, (users) => {
+              if(!users.length){
+                const userName =`<p class='userName'>該当するユーザーがいません</p>`
+                $('#userName').append(userName);
+              }
+              for(i = 0; i< users.length; i++){
+                const userName =`<a class='userName' href='/myPage/${users[i].id}'>${users[i].name}</br></a>`
+                $('#userName').append(userName);
+              }
+              const clearUser = document.getElementById("formUser");
+              clearUser.value = '';
+            })
+          }
+        })
+        $(document).keypress(function(e){
+          if (e.key === 'Enter') {
+            return false;
+          }
+        });
+        $(document).off('click', '.td')
+        $(document).on('click', '.td', function () {
+          //自分が予定を更新する
+          $('.postSchedule').remove();
+          $('#yearMonthDelete').remove();
+          const day = $(this).attr('id');
+          const dayId = day.split('/')
+          const user = $(this).attr('value');
+          const userConfirmation = user.split(',')
+          const schedules = document.getElementById(`schedule${day}`);
+          const schedulesTime = document.getElementById(`scheduleTime${day}`);
+          const schedulesContent = document.getElementById(`scheduleContent${day}`);
+          const joinUserDisplay = document.getElementById(`joinUserDisplay${day}`)
+          if(day&&!userConfirmation[1]){
+            const modal = document.getElementById('easyModal');
+            modal.style.display = 'block';
+            const nowYearMonth = `<h1 id='yearMonthDelete'>${day}</h1>`
+            $('.modalday').append(nowYearMonth)
+            if(schedules){
+              const display = schedules.getAttribute('value')
+              const userdisplay = display.split(',')
+              const schedule =`<form id="updateSchedule" class="postSchedule" name="day" method="POST" action="/schedule/${Number(userdisplay[1])}">
+                                <input type="hidden" name="date" value=${day}>
+                                <input type="hidden" name="UsersId" value=${user}>
+                                時間<br>
+                                <input type="time" name="time" value=${schedulesTime.innerHTML}><br>
+                                <div id='timeErr'></div>
+                                内容<br>
+                                <textarea name="content" cols="75" rows="10" value="">${schedulesContent.innerHTML}</textarea><br>
+                                <p id='joinUser'>参加者：${joinUserDisplay.outerHTML}</p>
+                              </form>`
+              $('.modal-body').append(schedule);
+              const btn = `<button type="button" class="btn btn-warning" id='sendUpdateSchedule'>更新</button>
+                           <button type="button" class="btn btn-danger" id='deleteSchedule'>削除</button>`
+              $('#updateSchedule').append(btn);
+              $(document).off('click', '#deleteSchedule')
+              $(document).on('click', '#deleteSchedule', function(e){
+                e.preventDefault();
+                axios.get(`/schedule/${Number(userdisplay[1])}/delete`)
+                .then(function(response){
+                  const schedules = document.getElementById(`schedule${day}`);
+                  schedules.remove()
+                  const modal = document.getElementById('easyModal');
+                  modal.style.display = 'none';
+                })
+              })
+              $(document).off('click', '#sendUpdateSchedule')
+              $(document).on('click', '#sendUpdateSchedule', function(e){
+                e.preventDefault();
+                axios.post(`/schedule/${Number(userdisplay[1])}`,{
+                  date: document.day.date.value,
+                  usersId: document.day.UsersId.value,
+                  content: document.day.content.value,
+                  time: document.day.time.value
+                }).then(function (errors) {
+                  if(!errors.data){
+                    const modal = document.getElementById('easyModal');
+                    modal.style.display = 'none';
+                    const schedulesContent = document.getElementById(`scheduleContent${day}`);
+                    const schedulesDisplayContent = document.getElementById(`scheduleDisplayContent${day}`);
+                    const schedulesTime = document.getElementById(`scheduleTime${day}`);
+                    schedulesContent.innerHTML = `${document.day.content.value}`;
+                    schedulesDisplayContent.innerHTML = `${document.day.content.value.slice(0, 11)}`;
+                    schedulesTime.innerHTML = `${document.day.time.value}`;
+                  }
+                  const timeErr = `時間が入力されていません`
+                  if(errors.data.errors.length==2){ 
+                    $('#timeErr').append(timeErr)
+                    document.day.content.placeholder = "スケジュールが入力されていません"
+                  }
+                  if(errors.data.errors[0].param == "content"){
+                    document.day.content.placeholder = "スケジュールが入力されていません"
+                    const timeError = document.getElementById('timeErr');
+                    timeError.innerHTML = ``;
+                  }
+                  if(errors.data.errors[0].param == "time"){
+                    $('#timeErr').append(timeErr)
+                  }
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+                })
+            } else {
+              const schedule =`<form id="postSchedule" class="postSchedule" name="day" method="POST" action="/schedule">
+                                <input type="hidden" name="date" value=${day}>
+                                <input type="hidden" name="UsersId" value=${user}>
+                                時間<br>
+                                <input type="time" name="time" ><br>
+                                <div id='timeErr'></div>
+                                内容<br>
+                                <textarea name="content" cols="75" rows="10" placeholder='スケジュールを入力してください'></textarea><br>
+                              </form>`
+              $('.modal-body').append(schedule);
+              const btn = `<button type="button" class="btn btn-primary" id='sendScheedul'>決定</button>`
+              $('#postSchedule').append(btn);
+            }
+          }
+          $(document).off('click', '#sendScheedul')
+          $(document).on('click', '#sendScheedul', function(e){
+            e.preventDefault();
+            const sheduleDay = []
+            const day =document.day.date.value.split('/')
+            if(day[1].length==1 && day[2].length==1){
+              sheduleDay.push(`${day[0]}-0${day[1]}-0${day[2]}`)
+            }else if(day[1].length==1){
+              sheduleDay.push(`${day[0]}-0${day[1]}-${day[2]}`)
+            }else if(day[2].length==1){
+              sheduleDay.push(`${day[0]}-${day[1]}-0${day[2]}`)
+            }else{
+              sheduleDay.push(`${day[0]}-${day[1]}-${day[2]}`)
+            }
+            axios.post('/schedule',{
+              date: sheduleDay[0],
+              UsersId: document.day.UsersId.value,
+              content: document.day.content.value,
+              time: document.day.time.value
+            }).then(function(response){
+              if(!response.data.errors){
+                const  ID = String(document.day.date.value)
+                const scheduleContent = `<div id="schedule${ID}" value="${response.data[0].id},${response.data[0].id}">
+                                          <span class="scheduleTime" id="scheduleTime${ID}">${document.day.time.value}</span>
+                                          <span id="scheduleContent${ID}" class="scheduleContent scheduleTime">${document.day.content.value}</span>
+                                          <span id="scheduleDisplayContent${ID}" class="scheduleDisplayContent">${document.day.content.value.slice(0, 10)}</span>
+                                          <div class="scheduleTime">
+                                            <div class="joinUserDisplay${dayId[2]}" id="joinUserDisplay${ID}"></div>
+                                          </div>
+                                        </div>`
+                $(`.${dayId[2]}`).append(scheduleContent)
+                const modal = document.getElementById('easyModal');
+                modal.style.display = 'none';
+              }else{
+                const timeErr = `時間が入力されていません`
+                if(response.data.errors.length==2){
+                  $('#timeErr').append(timeErr)
+                  document.day.content.placeholder = "スケジュールが入力されていません"
+                }
+                if(response.data.errors[0].param == "content"){
+                  const timeError = document.getElementById('timeErr');
+                  timeError.innerHTML = ``;
+                  document.day.content.placeholder = "スケジュールが入力されていません"
+                }
+                if(response.data.errors[0].param == "time"){
+                  $('#timeErr').append(timeErr)
+                }
+              }
+            })
+          })
+          if(!userConfirmation[1] == ''){
+            const name = document.getElementById('lookName').innerHTML
+            const nowYearMonth = `<h1 id='yearMonthDelete'>${day}  ${name.slice( 0, -8 )}さんの予定</h1>`
+            $('.modalday').append(nowYearMonth)
+            if(schedules){
+              modal.style.display = 'block';
+              const display = schedules.getAttribute('value')
+              const userdisplay = display.split(',')
+              const schedulesTime = document.getElementById(`scheduleTime${day}`);
+              const schedulesContent = document.getElementById(`scheduleContent${day}`);
+              const scheduleContent= `<div id="scheduleUserdispley">
+                                        <div>${schedulesTime.innerHTML}</div>
+                                        <div>${schedulesContent.innerHTML}</div>
+                                        <span>参加者：</span><span id="displayParticipant"></span>
+                                      </div>`
+              const userCheck = document.getElementById(`joinUser${userdisplay[1]}${userConfirmation[1]}`)
+              if(!userCheck){
+                const joinBtn = `<button id='joinusers' value='decline' class="btn btn-primary">参加する</button>`
+                const userjoincheck = joinUserDisplay.children;
+                $('#joinusers').remove();
+                $('#scheduleUserdispley').remove();
+                $('.modal-body').append(joinBtn)
+                $('#userdisplay').append(scheduleContent)
+                for(var i = 0; i < userjoincheck.length; i++){
+                  const joinUser = userjoincheck[i]
+                  $('#displayParticipant').append(userjoincheck[i].outerHTML) //参加者を表示
+                }
+                $(document).off('click', '#joinusers');
+                $(document).on('click', '#joinusers', function() {
+                  const joinuserBtn = document.getElementById('joinusers');
+                  const stop = joinuserBtn.getAttribute('value')
+                  $(`#joinUser${userdisplay[0]}${userConfirmation[1]}`).remove();
+                  axios.post(`/join/${userdisplay[0]}`)
+                  if(stop=='decline'){
+                    const joinBtn = `<button id='joinusers' value='cancel' class="btn btn-warning">キャンセル</button>`
+                    const name = `<span id='joinUser${userdisplay[0]}${userConfirmation[1]}' >${userConfirmation[1]}さん</span>`
+                    $('#scheduleUserdispley').remove();
+                    $('#joinusers').remove();
+                    $('#userdisplay').append(scheduleContent)
+                    for(var i = 0; i < userjoincheck.length; i++){
+                      const joinUser = userjoincheck[i]
+                      $('#displayParticipant').append(userjoincheck[i].outerHTML) //参加者を表示
+                    }
+                    $('#displayParticipant').append(name)
+                    $(`.joinUserDisplay${dayId[2]}`).append(name)
+                    $('.modal-body').append(joinBtn)
+                  }else{
+                    const joinBtn = `<button id='joinusers' value='decline' class="btn btn-primary">参加する</button>`
+                    $('#joinusers').remove();
+                    $('#scheduleUserdispley').remove();
+                    $('#userdisplay').append(scheduleContent)
+                    for(var i = 0; i < userjoincheck.length; i++){
+                      const joinUser = userjoincheck[i]
+                      $('#displayParticipant').append(userjoincheck[i].outerHTML) //参加者を表示
+                    }
+                    $('.modal-body').append(joinBtn)
+                    axios.get(`/join/${userdisplay[1]}/delete`)
+                  }
+                });
+              }
+              if(userCheck){
+                const joinBtn = `<button class="btn btn-warning" id='joinusers' value='decline'>キャンセル</button>`
+                const joinUserId = userCheck.getAttribute("id")
+                const userjoincheck = joinUserDisplay.children;
+                $('#scheduleUserdispley').remove();
+                $('#joinusers').remove();
+                $('.modal-body').append(joinBtn)
+                $('#userdisplay').append(scheduleContent)
+                for(var i = 0; i < userjoincheck.length; i++){
+                  const joinUser = userjoincheck[i]
+                  $('#displayParticipant').append(userjoincheck[i].outerHTML) //参加者を表示
+                }
+                $(document).off('click', '#joinusers');
+                $(document).on('click', '#joinusers', function() {
+                  const joinuserBtn = document.getElementById('joinusers');
+                  const stop = joinuserBtn.getAttribute('value')
+                  if(stop=='decline'){
+                    axios.get(`/join/${userdisplay[1]}/delete`)
+                    $(`#${joinUserId}`).remove();
+                    const joinBtn = `<button id='joinusers' value='cancel' class="btn btn-primary">参加する</button>`
+                    $(`#${joinUserId}`).remove();
+                    $('#joinusers').remove();
+                    $('.modal-body').append(joinBtn)
+                  }else{
+                    axios.post(`/join/${userdisplay[0]}`)
+                    const name = `<span id='${joinUserId}' >${userConfirmation[1]}さん</span>`
+                    $('#joinusers').remove();
+                    $('.modal-body').append(joinBtn)
+                    $(`.joinUserDisplay${dayId[2]}`).append(name)
+                    $('#displayParticipant').append(name)
+                  }
+                });
+              }
+            }
+          }
+        })
+        $(document).off('click', '.goNext');
+        $(document).on('click', '.goNext', function () {
+          $('.calendar').remove();
+          const workPatterns = $(this).attr('value');
+          const nowMonth = $(this).attr('id');
+          const yearMonth =nowMonth.split(',')
+          const date = new Date(`${yearMonth[0]}`, `${yearMonth[1]-1}`, 1);
+          const endMonthDay = String(new Date(`${yearMonth[0]}`, `${yearMonth[1]}`, 0)).split(' ')[2]
+          const nextMonth= String(date).split(' ')
+          const timePatterns = workPatterns.split(',')
+          const firstDay = date.getDay()
+          const from = new Date(`${yearMonth[5]}`);
+          const ms = date.getTime() - from.getTime();
+          const days = Math.floor(ms / (1000*60*60*24));
+          const yearMonthNext = `${Math.floor(Number(yearMonth[0])+(Number(yearMonth[1]-1)/12))}.${((Number(yearMonth[1]-1))%12)+1}`
+          const yearMonthBack = `${Math.floor(Number(yearMonth[0])+(Number(yearMonth[1]-1)/12))}.${((Number(yearMonth[1]))%12)+12}`
+          const nowYearMonth = document.getElementById('topYearMonth');
+          $('.goManth').remove();
+          if(yearMonth.length==3){
+            const appendManth = ` <li><a class="goManth goNext" id="${yearMonth[0]},${Number(yearMonth[1])-1},${nextMonth[1]}" value=""> ＜＜Back </a></li>
+                                <li class="goManth" id="topYearMonth"></li>
+                                <li><a class="goManth goNext" aria-current="page" id="${yearMonth[0]},${Number(yearMonth[1])+1},${nextMonth[1]}" value="">Next＞＞</a></li> `
+            $('#headerNav').append(appendManth)
+          }
+          if(yearMonth.length==6){
+            if(nowYearMonth.innerHTML.slice(5)==2){
+              const appendManth = ` <li><a class="goManth goNext" id="${yearMonth[0]-1},12,${nextMonth[1]},${yearMonth[3]},${yearMonth[4]},${yearMonth[5]}" value="${workPatterns}"> ＜＜Back </a></li>
+                                    <li class="goManth" id="topYearMonth"></li>
+                                    <li><a class="goManth goNext" aria-current="page" id="${yearMonth[0]},${Number(yearMonth[1])+1},${nextMonth[1]},${yearMonth[3]},${yearMonth[4]},${yearMonth[5]}" value="${workPatterns}">Next＞＞</a></li> `
+            $('#headerNav').append(appendManth)
+            }else{
+              const appendManth = ` <li><a class="goManth goNext" id="${yearMonth[0]},${Number(yearMonth[1])-1},${nextMonth[1]},${yearMonth[3]},${yearMonth[4]},${yearMonth[5]}" value="${workPatterns}"> ＜＜Back </a></li>
+                                    <li class="goManth" id="topYearMonth"></li>
+                                    <li><a class="goManth goNext" aria-current="page" id="${yearMonth[0]},${Number(yearMonth[1])+1},${nextMonth[1]},${yearMonth[3]},${yearMonth[4]},${yearMonth[5]}" value="${workPatterns}">Next＞＞</a></li> `
+            $('#headerNav').append(appendManth)
+            }
+          }
+          const carender = `<table class="calendar">
+                            </table>`
+
+          const dayOfeek = `<tr>
+                              <th>SUN</th><th>MON</th> <th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
+                            </tr>`
+          $('.calendar-container').append(carender);
+          $('.calendar').append(dayOfeek);
+          if(yearMonth[1]>0){
+            $('#topYearMonth').append(yearMonthNext);
+          }else{
+            $('#topYearMonth').append(yearMonthBack);
+          }
+          if(yearMonth.length==3){
+            for (var a = 0; a < 6; a++) {
+              const week = `<tr id="day${a}" class="day">
+                            </tr>`
+              const day = `<td> 
+                            ${i+1-firstDay}日<br>
+                            ${timePatterns[(i+(7*a))%timePatterns.length]}<br>
+                            ${i+(7*a)} 
+                          </td>`;
+              $('.calendar').append(week);
+              $(`#day${week}`).append(day);
+              for (var i = -firstDay; i < 7-firstDay; i++) {
+                if(i+(a*7) > endMonthDay-1){
+                  if(7+(-firstDay-i)===7){
+                    break;
+                  }
+                  const day = `<td></td>`;
+                  $(`#day${a}`).append(day);
+                } else if (i+(a*7) < 0){
+                  const day = `<td></td>`;
+                $(`#day${a}`).append(day);
+                } else {
+                  const day = `<td>${Number(i+1+(7*a))}日</td>`;
+                    $(`#day${a}`).append(day);
+                }
+              }
+            }
+          }
+          $.getJSON(`/ajax/${yearMonth[3]}/?id=` + nowMonth,(schedule) => {
+            for (var a = 0; a < 6; a++) {
+              const week = `<tr id="day${a}" class="day">
+                            </tr>`
+              const day = `<td> 
+                            ${i+1-firstDay}日<br>
+                            ${timePatterns[(i+(7*a))%timePatterns.length]}<br>
+                            ${i+(7*a)} 
+                          </td>`;
+              $('.calendar').append(week);
+              $(`#day${week}`).append(day);
+              for (var i = -firstDay; i < 7-firstDay; i++) {
+                if(i+(a*7) > endMonthDay-1){
+                  if(7+(-firstDay-i)===7){
+                    break;
+                  }
+                  const day = `<td></td>`;
+                  $(`#day${a}`).append(day);
+                } else if (i+(a*7) < 0){
+                  const day = `<td></td>`;
+                $(`#day${a}`).append(day);
+                } else {
+                  const myschedule = schedule.filter(sched => Number(sched.date.slice(8, 10))===Number(i+1+(7*a)))
+                  const yearMonthDay = `${Math.floor(Number(yearMonth[0])+(Number(yearMonth[1]-1)/12))}/${((Number(yearMonth[1]-1))%12)+1}/${Number(i+1+(7*a))}`
+                  if(!myschedule.length){
+                    const day = `<td id= ${yearMonthDay} class='${Number(i+1+(7*a))} td' value='${yearMonth[3]},${yearMonth[4]}'> 
+                                  <div class="tdTop">
+                                    <div class="date">${Number(i+1+(7*a))}日</div>
+                                    <div>${Number(i+1+(7*a)+days)>=0?timePatterns[(i+1+(7*a)+days)%timePatterns.length]:''}</div>
+                                  </div>
+                                </td>`;
+                    $(`#day${a}`).append(day);
+                  }else{
+                    const day = `<td id= ${yearMonthDay} class='${Number(i+1+(7*a))} td' value='${yearMonth[3]},${yearMonth[4]}'>
+                                  <div class="tdTop">
+                                    <div class="date">${Number(i+1+(7*a))}日</div>
+                                    <div>${Number(i+1+(7*a)+days)>=0?timePatterns[(i+1+(7*a)+days)%timePatterns.length]:''}</div> 
+                                  </div> 
+                                  <div id='schedule${yearMonthDay}' value='${myschedule[0].id},${myschedule[0].id}'>           
+                                    <span class='scheduleTime' id='scheduleTime${yearMonthDay}'> ${myschedule[0].time.slice(0 ,5)} </span>
+                                    <span id='scheduleContent${yearMonthDay}' class='scheduleContent scheduleTime'>${myschedule[0].content}</span>
+                                    <span id="scheduleDisplayContent${yearMonthDay}" class="scheduleDisplayContent">${myschedule[0].content.slice(0, 10)}</span>
+                                    <div class="scheduleTime">
+                                      <span class='joinUserDisplay${Number(i+1+(7*a))}' id="joinUserDisplay${yearMonthDay}"></span>
+                                    </div>
+                                  </div>
+                                </td>`;
+                    $(`#day${a}`).append(day);
+                    for(var d = 0; d < myschedule[0].join.length; d++){
+                      const joinUser = `<span class="joinusers" id='joinUser${myschedule[0].id}${myschedule[0].join[d].name}'>${myschedule[0].join[d].name}さん</span>`
+                      $(`.joinUserDisplay${Number(i+1+(7*a))}`).append(joinUser)
+                    }
+                  }
+                }
+              }
+            }
+          });
+        })
+      });
+      const btn = document.getElementById('btn');
+      const modal = document.getElementById('easyModal');
+      const buttonClose = document.getElementsByClassName('modalClose')[0];
+      const userName = document.getElementById('userName');
+      // バツ印がクリックされた時
+      buttonClose.addEventListener('click', modalClose);
+      function modalClose() {
+        modal.style.display = 'none';
+      }
+      addEventListener('click', (e)=>{
+        if (e.target == btn || e.target== userName) {
+          modal.style.display = 'none';
+          userName.style.display = 'block';
+        } else {
+          userName.style.display = 'none';
+        }
+        if (e.target == modal) {
+          modal.style.display = 'none';
+          userName.style.display = 'none';
+        }
+      });
+    </script>
+</html>
