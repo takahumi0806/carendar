@@ -30,19 +30,13 @@ th, td {
 th {
   font-weight: normal;
   font-size: 14px;
-  width:  150px;              /* 幅指定 */
+  width:  150px;
   height: 100px; 
 }
 td {
   text-align:  center; 
   overflow: scroll;
 }
-/* .day *:nth-child(1) {
-  color: #ff838b;
-}
-.day *:last-child {
-  color: #6fb5ff;
-} */
 a {
   text-decoration: none!important;
   color: #1a1a1a;
@@ -51,7 +45,6 @@ a {
   position: absolute;
   z-index: 1; 
   background-color: white;
-  /* display: none; */
   height: 30%;
   width: 15%;
   display: none;
@@ -61,7 +54,6 @@ body {
   font-family: serif;
   font-size: 16px;
   line-height: 1.6;
-  /* color: #fff; */
 }
 
 .button {

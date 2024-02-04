@@ -2,8 +2,6 @@ const { check } = require('express-validator');
 
 module.exports = [
   check('startDate').not().isEmpty().withMessage('スタートする日付が入力されていません'),
-  // check('patternStart1').not().isEmpty().withMessage('時間が入力されていません'),
-  // check('patternHoliday1').not().isEmpty().withMessage('時間が入力されていません'),
   check('patternStart1').
     custom((value, { req }) => {
       if (req.body.patternStart1 && req.body.patternHoliday1==undefined || req.body.patternStart1=="" && req.body.patternHoliday1=="休") {

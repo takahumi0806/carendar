@@ -27,10 +27,8 @@ module.exports = {
       const errorMessage = ""
       if(!req.params.id || req.params.id==userId.id){
         if(patternStartDay.length){
-          // const from = new Date(patternStartDay[0].dataValues.startDate);
             const startDate = patternStartDay[0].dataValues.startDate
             startPattren.push(startDate)
-            // const date = new Date(`${today[0]}`, `${today[1]-1}`, 1);
             const ms = new Date(`${today[0]}`, `${today[1]-1}`, 1).getTime() - new Date(patternStartDay[0].dataValues.startDate).getTime();
             const days = Math.floor(ms / (1000*60*60*24));
             startPattren.push(days)
